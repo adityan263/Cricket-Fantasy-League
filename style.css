@@ -1,0 +1,18 @@
+.button1 {
+	background-color: #1A5BE8;
+	color: white;
+	vertical-align: middle;
+	height: 50px;
+	width: 22.5%;
+	border: none;
+	cursor: pointer;
+	font-size: 15;
+}
+body {
+	background-image: url("background.jpg");
+	background-size: cover;
+}
+.title {
+	font-size:30pt;
+	color: #A52A2A;
+}

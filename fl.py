@@ -5,7 +5,6 @@ import psycopg2
 conn = psycopg2.connect(database="cricket", user="project", host="127.0.0.1",
         password="cricket", port="5432")
 cursor = conn.cursor()
-#cursor.execute(("rollback;"))..........only if doesn't work
 
 @app.route('/')
 @app.route('/login.html')
@@ -17,10 +16,18 @@ def login_page(name=None):
 @app.route('/login.html', methods=['POST','GET'])
 def login_page_post(name=None):
     username, password = request.form['username'],request.form['password']
+    try:
+        cursor.execute(("select password from users where name ='{}'".format(username)))
+    except:
+        cursor.execute(("rollback;"))
     cursor.execute(("select password from users where name ='{}'".format(username)))
     a = cursor.fetchone()
+    if not a:
+        return ("Incorrect username")
     if a[0] == password:
         return ("Hello {}, you've successfully logged in".format(username))
+    else
+        return ("Incorrect Password")
 
 
 

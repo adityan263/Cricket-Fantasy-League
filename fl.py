@@ -17,10 +17,10 @@ def login_page(name=None):
 def login_page_post(name=None):
     username, password = request.form['username'],request.form['password']
     try:
-        cursor.execute(("select password from users where name ='{}';".format(username)))
+        cursor.execute(("select password from users where username ='{}';".format(username)))
     except:
         cursor.execute(("rollback;"))
-    cursor.execute(("select password from users where name ='{}';".format(username)))
+    cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
         return ("Incorrect username")
@@ -45,17 +45,17 @@ def registration_page_post(name=None):
     if password != cpassword:
         return ("Password does not match")
     try:
-        cursor.execute(("select password from users where name ='{}';".format(username)))
+        cursor.execute(("select password from users where username ='{}';".format(username)))
     except:
         cursor.execute(("rollback;"))
-    cursor.execute(("select password from users where name ='{}';".format(username)))
+    cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
         try:
-            cursor.execute(("insert into users(name, password) values('{}', '{}');".format(username, password)))
+            cursor.execute(("insert into users(username, password) values('{}', '{}');".format(username, password)))
         except:
             cursor.execute(("rollback;"))
-        cursor.execute(("insert into users(name,password) values('{}', '{}');".format(username, password)))
+        cursor.execute(("insert into users(username, password) values('{}', '{}');".format(username, password)))
         return ("Hello {}, you've successfully registered".format(username))
     else:
         return ("Username is already taken!")

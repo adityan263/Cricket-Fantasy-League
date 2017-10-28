@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-import psycopg2
-conn = psycopg2.connect(database="cricket", user="project", host="127.0.0.1",
+import mysql.connector
+conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
         password="cricket")
 cursor = conn.cursor()
 
@@ -16,13 +16,8 @@ def login_page(name=None):
 @app.route('/login.html', methods=['POST','GET'])
 def login_page_post(name=None):
     username, password = request.form['username'],request.form['password']
-    try:
-        cursor.execute(("select password from users where username ='{}';".format(username)))
-    except:
-        cursor.execute(("rollback;"))
-        cursor.execute(("select password from users where username ='{}';".format(username)))
+    cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
-    cursor.execute(("commit;"))
     if not a:
         return ("Incorrect username")
     if a[0] == password:
@@ -45,18 +40,10 @@ def registration_page_post(name=None):
     cpassword = request.form['cpassword']
     if password != cpassword:
         return ("Password does not match")
-    try:
-        cursor.execute(("select password from users where username ='{}';".format(username)))
-    except:
-        cursor.execute(("rollback;"))
-        cursor.execute(("select password from users where username ='{}';".format(username)))
+    cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
-        try:
-            cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
-        except:
-            cursor.execute(("rollback;"))
-            cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
+        cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
         cursor.execute(("commit;"))
         return ("Hello {}, you've successfully registered".format(username))
     else:

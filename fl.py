@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 import mysql.connector
-conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
-        password="cricket")
+conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
+        password="vivbhav97")
 cursor = conn.cursor()
 
 @app.route('/')
@@ -11,6 +11,24 @@ cursor = conn.cursor()
 def login_page(name=None):
     return render_template('login.html', name=name)
 
+@app.route('/afterlogin.html')
+def aflogin(name=None):
+    return render_template('afterlogin.html', name=name)
+
+@app.route('/price.html')
+def lists(name=None):
+    return render_template('price.html', name=name)
+
+@app.route('/price.html', methods=['POST', 'GET'])
+def plist(name=None):
+    cursor.execute("select * from users")
+    rows = []
+    for i in range(3):
+        a = cursor.fetchone()
+        rows.append(a)
+   # print (rows)
+    return render_template('price.html', rows=rows)
+   # return row
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login.html', methods=['POST','GET'])
@@ -28,6 +46,7 @@ def login_page_post(name=None):
 @app.route('/registration.html')
 def registration_page(name=None):
     return render_template('registration.html', name=name)
+
 
 @app.route('/registration.html', methods=['POST','GET'])
 def registration_page_post(name=None):

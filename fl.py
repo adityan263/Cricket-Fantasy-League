@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 import mysql.connector
-conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
-        password="vivbhav97")
+conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
+        password="Cricket.1")
 cursor = conn.cursor()
 
 @app.route('/')
@@ -16,19 +16,13 @@ def aflogin(name=None):
     return render_template('afterlogin.html', name=name)
 
 @app.route('/price.html')
-def lists(name=None):
-    return render_template('price.html', name=name)
-
-@app.route('/price.html', methods=['POST', 'GET'])
 def plist(name=None):
     cursor.execute("select * from users")
-    rows = []
-    for i in range(3):
+    rows = [i for i in cursor]
+    """for i in range(3):
         a = cursor.fetchone()
-        rows.append(a)
-   # print (rows)
-    return render_template('price.html', rows=rows)
-   # return row
+        rows.append(a)"""
+    return render_template('price.html', name=name, rows=rows)
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login.html', methods=['POST','GET'])

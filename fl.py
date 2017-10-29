@@ -19,9 +19,6 @@ def aflogin(name=None):
 def plist(name=None):
     cursor.execute("select * from users")
     rows = [i for i in cursor]
-    """for i in range(3):
-        a = cursor.fetchone()
-        rows.append(a)"""
     return render_template('price.html', name=name, rows=rows)
 
 @app.route('/', methods=['POST','GET'])
@@ -61,15 +58,3 @@ def registration_page_post(name=None):
         return ("Hello {}, you've successfully registered".format(username))
     else:
         return ("Username is already taken!")
-
-
-
-
-
-"""
-insert into users(name,password) values('aditya','asdfg');
-@app.route('/p')
-def hell_word(name=None):
-    a = ["asd;lfk","afgth","tyjytd"]
-    return render_template("c.html",name=name,rows=a)
-"""

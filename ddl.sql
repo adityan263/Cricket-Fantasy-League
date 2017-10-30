@@ -10,7 +10,7 @@ CREATE TABLE users(
 
 CREATE TABLE team(
 	team_id INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(20) NOT NULL,
+	name VARCHAR(30) NOT NULL,
 	total_matches INT,
 	wins INT,
 	points INT
@@ -20,7 +20,7 @@ CREATE TABLE player(
 	player_id INT PRIMARY KEY AUTO_INCREMENT,
 	team_id INT NOT NULL,
 	debut INT,
-	name VARCHAR(20) NOT NULL,
+	name VARCHAR(30) NOT NULL,
 	matches INT,
 	batstyle VARCHAR(5) NOT NULL,
 	runs INT,
@@ -59,9 +59,9 @@ CREATE TABLE dismissal(
 
 CREATE TABLE ground(
 	ground_id INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(20) NOT NULL,
-	city VARCHAR(10) NOT NULL,
-	country VARCHAR(10) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	city VARCHAR(20) NOT NULL,
+	country VARCHAR(20) NOT NULL,
 	capacity INT
 );
 

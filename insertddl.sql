@@ -52,4 +52,13 @@ insert into ground values (37, 'Asgiriya Stadium', 'Kandy', 'Sri Lanka', 5000);
 insert into ground values (38, 'Colombo Cricket', 'Colombo', 'Sri Lanka', 6000);
 insert into ground values (39, 'Dubai International', 'Dubai', 'UAE', 26000);
 insert into ground values (40, 'Sharjah Cricket', 'Sharjah', 'UAE', 35000);
+insert into ground values (41, 'Uppal', 'Hyderabad', 'India', 40000);
 
+insert into team values (1, 'MI', 14, 10, 20);
+insert into team values (2, 'RPS', 14, 9, 18);
+insert into team values (3, 'SRH', 14, 8, 17);
+insert into team values (4, 'KKR', 14, 8, 16);
+insert into team values (5, 'KP', 14, 7, 14);
+insert into team values (6, 'DD', 14, 6, 12);
+insert into team values (7, 'GL', 14, 4, 8);
+insert into team values (8, 'RCB', 14, 3, 7);

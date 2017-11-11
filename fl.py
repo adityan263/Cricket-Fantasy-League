@@ -3,6 +3,7 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
+<<<<<<< HEAD
 conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
         password="Cricket.1")
 #conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
@@ -21,7 +22,7 @@ def aflogin(name=None):
 
 @app.route('/price.html')
 def plist(name=None):
-    cursor.execute("select name,matches,runs,highest_score,fours,sixes,wickets,fourhaul,fivehaul,price from player;")
+    cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 

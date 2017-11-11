@@ -3,11 +3,8 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
-<<<<<<< HEAD
 conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
         password="Cricket.1")
-#conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
-#        password="vivbhav97")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
 

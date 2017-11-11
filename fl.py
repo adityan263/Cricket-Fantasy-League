@@ -3,10 +3,8 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
-#conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
-#        password="Cricket.1")
-conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
-        password="vivbhav97")
+conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
+        password="Cricket.1")
 cursor = conn.cursor()
 
 @app.route('/')
@@ -29,7 +27,7 @@ def sched(name=None):
     date = datetime.datetime.today().strftime('%Y-%m-%d')
     print (date)
 
-    cursor.execute("""select team1_id, team2_id, dates, time, ground_id from matches where dates > '%s'""" % (date))
+    cursor.execute("""select team1_id, team2_id, dates, ground_id from matches where dates > '%s'""" % (date))
     ans = [i for i in cursor]
     new = [[0 for x in range(len(ans))] for y in range(3)]
     
@@ -44,7 +42,7 @@ def sched(name=None):
         t2 = [i for i in cursor]
         new[i][1] = t2
 
-        ground = ans[i][4]
+        ground = ans[i][3]
         cursor.execute("""select name from ground where ground_id = '%d'""" %(ground))
         gr = [i for i in cursor]
         new[i][2] = gr

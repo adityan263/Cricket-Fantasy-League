@@ -73,11 +73,16 @@ CREATE TABLE matches(
 	time TIME,
 	ground_id INT,
 	batfirst INT,
+	winner INT,
 	toss INT,
 	MoM INT,
 	FOREIGN KEY (team1_id) REFERENCES team(team_id),
 	FOREIGN KEY (team2_id) REFERENCES team(team_id),
-	FOREIGN KEY (ground_id) REFERENCES ground (ground_id)
+	FOREIGN KEY (ground_id) REFERENCES ground (ground_id),
+	FOREIGN KEY (winner) REFERENCES team(team_id),
+	FOREIGN KEY (MoM) REFERENCES player(player_id),
+	FOREIGN KEY (toss) REFERENCES team(team_id),
+	FOREIGN KEY (batfirst) REFERENCES team(team_id)
 );
 
 CREATE TABLE match_team_performance(

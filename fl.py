@@ -3,11 +3,12 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
-#conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
-#        password="Cricket.1")
-conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
-        password="vivbhav97")
-cursor = conn.cursor()
+conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
+        password="Cricket.1")
+#conn = mysql.connector.connect(database="cricket", user="root", host="127.0.0.1",
+#        password="vivbhav97")
+cursor = conn.cursor(buffered=True)
+cursor1 = conn.cursor(buffered=True)
 
 @app.route('/')
 @app.route('/login.html')
@@ -20,36 +21,45 @@ def aflogin(name=None):
 
 @app.route('/price.html')
 def plist(name=None):
-    cursor.execute("select * from users")
+    cursor.execute("select name,matches,runs,highest_score,fours,sixes,wickets,fourhaul,fivehaul,price from player;")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
+
+@app.route('/administrator.html')
+def ulist(name=None):
+    cursor.execute("select * from users;")
+    rows = [i for i in cursor]
+    return render_template('administrator.html', name=name, rows=rows)
 
 @app.route('/schedule.html')
 def sched(name=None):    
     date = datetime.datetime.today().strftime('%Y-%m-%d')
-    print (date)
 
-    cursor.execute("""select team1_id, team2_id, dates, time, ground_id from matches where dates > '%s'""" % (date))
-    ans = [i for i in cursor]
-    new = [[0 for x in range(len(ans))] for y in range(3)]
-    
-    for i in range(len(ans)):
-        team1 = ans[i][0]
-        team2 = ans[i][1]
-        cursor.execute("""select name from team where team_id = '%d'""" %(team1))
-        t1 = [i for i in cursor]
-        new[i][0] = t1
+    cursor1.execute("""select team1_id, team2_id, dates, ground_id from matches where dates > '%s';""" % (date))
+    ans = []
+    new = cursor1.fetchone()
+    while new:
+        a = []
+        team1 = new[0]
+        team2 = new[1]
+        ground = new[3]
+        cursor.execute("""select name from team where team_id = '%d';""" %(team1))
+        t = cursor.fetchone()
+        a.append(t[0])
 
-        cursor.execute("""select name from team where team_id = '%d'""" %(team2))
-        t2 = [i for i in cursor]
-        new[i][1] = t2
+        cursor.execute("""select name from team where team_id = '%d';""" %(team2))
+        t = cursor.fetchone()
+        a.append(t[0])
 
-        ground = ans[i][4]
-        cursor.execute("""select name from ground where ground_id = '%d'""" %(ground))
-        gr = [i for i in cursor]
-        new[i][2] = gr
+        a.append(new[2])
 
-    return render_template('schedule.html', name=name, ans=ans, new=new)
+        cursor.execute("""select name from ground where ground_id = '%d';""" %(ground))
+        t = cursor.fetchone()
+        a.append(t[0])
+        ans.append(a)
+        new = cursor1.fetchone()
+
+    return render_template('schedule.html', name=name, ans=ans)
 
 
 @app.route('/home.html')

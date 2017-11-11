@@ -75,31 +75,21 @@
 		<button class="button1"> Top Players </button>
 		</div>
 		<br><br><br><br>
-		<table style="width: 100%" align="center">
-			<tr>
+		<table style="width: 100%" align="center" border=1>
+			<tr align="center">
 				<th> Team1 </th>
 				<th> Team2 </th>
 				<th> Date </th>
-				<th> Time </th>
-				<th> Ground_id </th>
+				<th> Ground Name </th>
 			</tr>
 			{% for row in ans %}
-			<tr>
+			<tr align="center">
 				<td> {{ row[0] }} </td>
 				<td> {{ row[1] }} </td>
 				<td> {{ row[2] }} </td>
 				<td> {{ row[3] }} </td>
-				<td> {{ row[4] }} </td>
 			</tr>
-			{% endfor %}	
-		<!--	
-			{% for row in new %}
-			<tr>
-				<td> {{ row[0] }} </td>
-				<td> {{ row[1] }} </td>
-				<td> {{ row[2] }} </td>
-			</tr>
-			{% endfor %}	-->
+			{% endfor %}
 		</table>
 	</body>
 </html>

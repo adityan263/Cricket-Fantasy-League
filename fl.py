@@ -21,6 +21,10 @@ def plist(name=None):
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 
+@app.route('/home.html')
+def matchinfo(name=None):
+    return render_template('home.html', name=name)
+
 @app.route('/', methods=['POST','GET'])
 @app.route('/login.html', methods=['POST','GET'])
 def login_page_post(name=None):

@@ -79,7 +79,7 @@ def login_page_post(name=None):
     cursor.execute(("select password, user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
-        return ("Incorrect username")
+        return render_template('login.html', name=name,error1="Incorrect username",error2="")
     if a[0] == password:
         f=open("current_user.txt","w")
         f.write(str(a[1]))
@@ -87,7 +87,7 @@ def login_page_post(name=None):
         print("user_id is"+str(a[1]))
         return render_template('home.html', name=name)
     else:
-        return ("Incorrect Password")
+        return  render_template('login.html', name=name,error2="Incorrect Password",error1="")
 
 @app.route('/registration.html')
 def registration_page(name=None):
@@ -104,7 +104,7 @@ def registration_page_post(name=None):
     password = request.form['password']
     cpassword = request.form['cpassword']
     if password != cpassword:
-        return ("Password does not match")
+        return  render_template('registration.html', name=name,error="Passwords do not match")
     cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
@@ -118,7 +118,7 @@ def registration_page_post(name=None):
         print("user_id is"+str(a[0]))
         return render_template('home.html', name=name)
     else:
-        return ("Username is already taken!")
+        return  render_template('registration.html', name=name,error="Username is already taken!")
 
 @app.route('/creategroup.html')
 def create_group_page(name=None):
@@ -135,7 +135,7 @@ def create_group(name=None):
     cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
     a = cursor.fetchone()
     if a:
-        return ("Group name is already taken.")
+        return render_template('creategroup.html', name=name,error="Group name is already taken!")
     cursor.execute(("insert into groups(groupname) values('{}');".format(grpname)))
     cursor.execute(("commit;"))
     cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
@@ -164,7 +164,7 @@ def addto_group(name=None):
     cursor.execute(("select user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
-        return ("Invalid username")
+        return render_template('addtogroup.html', name=name,error="Invalid username")
     else:
         uid = a[0]
     cursor.execute(("select group_id from group where groupname='{}';".format(grpname)))
@@ -173,7 +173,7 @@ def addto_group(name=None):
     cursor.execute(("select * from user_group where (user_id='{}' and group_id='{}');".format(uid,gid)))
     a = cursor.fetchone()
     if not a:
-        return ("User is already part of group.")
+        return render_template('addtogroup.html', name=name,error="User is already part of group!")
     cursor.execute(("insert into user_group values('{}','{}');".format(uid,gid)))
     cursor.execute(("commit;"))
     return render_template('addtogroup.html', name=name)

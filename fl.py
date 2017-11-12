@@ -7,6 +7,7 @@ conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0
         password="Cricket.1")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
+#Even if previous user didn't logout, current_user will be cleared.
 f=open("current_user.txt","w")
 f.write("0")
 f.close()
@@ -16,9 +17,13 @@ f.close()
 def login_page(name=None):
     return render_template('login.html', name=name)
 
-@app.route('/afterlogin.html')
-def aflogin(name=None):
-    return render_template('afterlogin.html', name=name)
+#just add a logout button and add link /logout.html
+@app.route('/logout.html')
+def logout(name=None):
+    f=open("current_user.txt","w")
+    f.write("0")
+    f.close() #redirect to login page 
+    return render_template('login.html', name=name)
 
 @app.route('/price.html')
 def plist(name=None):
@@ -117,6 +122,11 @@ def registration_page_post(name=None):
 
 @app.route('/creategroup.html')
 def create_group_page(name=None):
+    f=open("current_user.txt","r")
+    user_id=f.read()
+    f.close()
+    if not user_id:
+        return render_template('login.html', name=name)
     return render_template('creategroup.html', name=name)
 
 @app.route('/creategroup.html', methods=['POST','GET'])
@@ -140,6 +150,11 @@ def create_group(name=None):
 
 @app.route('/addtogroup.html')
 def addto_group_page(name=None):
+    f=open("current_user.txt","r")
+    user_id=f.read()
+    f.close()
+    if not user_id:
+        return render_template('login.html', name=name)
     return render_template('addtogroup.html', name=name)
 
 @app.route('/addtogroup.html', methods=['POST','GET'])

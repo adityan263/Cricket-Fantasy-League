@@ -1,4 +1,18 @@
-CREATE TABLE users(                                                                                          
+DROP TABLE match_team_performance;
+DROP TABLE match_player_bat;
+DROP TABLE match_player_bowl;
+DROP TABLE dismissal;
+DROP TABLE player;
+DROP TABLE user_group;
+DROP TABLE matches;
+DROP TABLE groups;
+DROP TABLE team;
+DROP TABLE users;
+DROP TABLE ground;
+
+
+
+CREATE TABLE users(                                                 
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
 	firstname VARCHAR(20) NOT NULL,
 	lastname VARCHAR(20) NOT NULL,
@@ -9,35 +23,37 @@ CREATE TABLE users(
 );
 
 CREATE TABLE team(
-	team_id INT PRIMARY KEY AUTO_INCREMENT,
+	team_id INT,
 	name VARCHAR(30) NOT NULL,
-	total_matches INT,
-	wins INT,
-	points INT
+	win_year VARCHAR(30),
+	owner VARCHAR(50),
+	coach VARCHAR(30),
+	venue VARCHAR(530),
+	captain VARCHAR(30),
+	PRIMARY KEY(team_id)
 );
 
 CREATE TABLE player(
-	player_id INT PRIMARY KEY AUTO_INCREMENT,
-	team_id INT NOT NULL,
-	debut INT,
+	player_id INT AUTO_INCREMENT,
 	name VARCHAR(30) NOT NULL,
-	matches INT,
+	team_id INT NOT NULL,
 	batstyle VARCHAR(5) NOT NULL,
+	matches INT,
 	runs INT,
-	balls INT,
 	highest_score INT,
-	fifties INT,
+	average FLOAT,
+	strike_rate FLOAT,
 	hundreds INT,
-	strike_rate float,
-	overs INT,
+	fifties INT,
+	fours INT,
+	sixes INT,
 	wickets INT,
-	eco float,
+	eco FLOAT,
+	fourhaul INT,
 	fivehaul INT,
-	tenhaul INT,
-	maidens INT,
-	price bigINT,
-	FOREIGN KEY (team_id) REFERENCES team(team_id),
-	FOREIGN KEY (debut) REFERENCES team(team_id)
+	price INT,
+	PRIMARY KEY(player_id),
+	FOREIGN KEY (team_id) REFERENCES team(team_id)
 );
 
 CREATE TABLE groups(
@@ -53,13 +69,13 @@ CREATE TABLE user_group(
 );
 
 CREATE TABLE dismissal(
-	dismissal_id INT PRIMARY KEY AUTO_INCREMENT,
+	dismissal_id INT PRIMARY KEY,
 	dismissal_name VARCHAR(10)
 );
 
 CREATE TABLE ground(
 	ground_id INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(50) NOT NULL,
+	name VARCHAR(100) NOT NULL,
 	city VARCHAR(20) NOT NULL,
 	country VARCHAR(20) NOT NULL,
 	capacity INT
@@ -69,20 +85,15 @@ CREATE TABLE matches(
 	match_id INT PRIMARY KEY AUTO_INCREMENT,
 	team1_id INT,
 	team2_id INT,
-	dates DATE,
-	time TIME,
 	ground_id INT,
-	batfirst INT,
-	winner INT,
+	dates DATE,
 	toss INT,
+	batfirst INT,
+	team_won INT,
 	MoM INT,
 	FOREIGN KEY (team1_id) REFERENCES team(team_id),
 	FOREIGN KEY (team2_id) REFERENCES team(team_id),
-	FOREIGN KEY (ground_id) REFERENCES ground (ground_id),
-	FOREIGN KEY (winner) REFERENCES team(team_id),
-	FOREIGN KEY (MoM) REFERENCES player(player_id),
-	FOREIGN KEY (toss) REFERENCES team(team_id),
-	FOREIGN KEY (batfirst) REFERENCES team(team_id)
+	FOREIGN KEY (ground_id) REFERENCES ground (ground_id)
 );
 
 CREATE TABLE match_team_performance(
@@ -107,10 +118,9 @@ CREATE TABLE match_player_bowl(
 	maidens INT,
 	runs INT,
 	wickets INT,
+	ECO FLOAT,
 	wides INT,
 	noballs INT,
-	byes INT,
-	legbyes INT,
 	PRIMARY KEY (player_id, match_id),
 	FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
 	FOREIGN KEY (player_id) REFERENCES player(player_id)
@@ -123,6 +133,7 @@ CREATE TABLE match_player_bat(
 	balls INT,
 	fours INT,
 	sixes INT,
+	strike_rate FLOAT,	
 	dismissal_id INT,
 	dismissal_assist INT,
 	bowler INT,
@@ -131,4 +142,4 @@ CREATE TABLE match_player_bat(
 	FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
 	FOREIGN KEY (player_id) REFERENCES player(player_id),
 	FOREIGN KEY (dismissal_id) REFERENCES dismissal (dismissal_id)
-);
+)

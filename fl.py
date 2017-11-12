@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,flash
 app = Flask(__name__)
 
 import datetime
@@ -7,6 +7,9 @@ conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0
         password="Cricket.1")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
+f=open("current_user.txt","w")
+f.write("0")
+f.close()
 
 @app.route('/')
 @app.route('/login.html')
@@ -68,12 +71,16 @@ def matchinfo(name=None):
 @app.route('/login.html', methods=['POST','GET'])
 def login_page_post(name=None):
     username, password = request.form['username'],request.form['password']
-    cursor.execute(("select password from users where username ='{}';".format(username)))
+    cursor.execute(("select password, user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
         return ("Incorrect username")
     if a[0] == password:
-        return ("Hello {}, you've successfully logged in".format(username))
+        f=open("current_user.txt","w")
+        f.write(str(a[1]))
+        f.close()
+        print("user_id is"+str(a[1]))
+        return render_template('home.html', name=name)
     else:
         return ("Incorrect Password")
 
@@ -98,7 +105,60 @@ def registration_page_post(name=None):
     if not a:
         cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
         cursor.execute(("commit;"))
-        return ("Hello {}, you've successfully registered".format(username))
+        cursor.execute(("select user_id from users where username ='{}';".format(username)))
+        a = cursor.fetchone()
+        f=open("current_user.txt","w")
+        f.write(str(a[0]))
+        f.close()
+        print("user_id is"+str(a[0]))
+        return render_template('home.html', name=name)
     else:
         return ("Username is already taken!")
 
+@app.route('/creategroup.html')
+def create_group_page(name=None):
+    return render_template('creategroup.html', name=name)
+
+@app.route('/creategroup.html', methods=['POST','GET'])
+def create_group(name=None):
+    grpname = request.form['grpname']
+    cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
+    a = cursor.fetchone()
+    if a:
+        return ("Group name is already taken.")
+    cursor.execute(("insert into groups(groupname) values('{}');".format(grpname)))
+    cursor.execute(("commit;"))
+    cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
+    a = cursor.fetchone()
+    group_id = a[0]
+    f=open("current_user.txt","r")
+    user_id=f.read()
+    f.close()
+    cursor.execute(("insert into user_group(user_id, group_id) values('{}','{}');".format(user_id, group_id)))
+    cursor.execute(("commit;"))
+    return render_template('addtogroup.html', name=name)
+
+@app.route('/addtogroup.html')
+def addto_group_page(name=None):
+    return render_template('addtogroup.html', name=name)
+
+@app.route('/addtogroup.html', methods=['POST','GET'])
+def addto_group(name=None):
+    username = request.form['username']
+    grpname="sdf"#get it from html page
+    cursor.execute(("select user_id from users where username ='{}';".format(username)))
+    a = cursor.fetchone()
+    if not a:
+        return ("Invalid username")
+    else:
+        uid = a[0]
+    cursor.execute(("select group_id from group where groupname='{}';".format(grpname)))
+    a = cursor.fetchone()
+    gid = a[0]
+    cursor.execute(("select * from user_group where (user_id='{}' and group_id='{}');".format(uid,gid)))
+    a = cursor.fetchone()
+    if not a:
+        return ("User is already part of group.")
+    cursor.execute(("insert into user_group values('{}','{}');".format(uid,gid)))
+    cursor.execute(("commit;"))
+    return render_template('addtogroup.html', name=name)

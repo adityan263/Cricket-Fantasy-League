@@ -38,7 +38,7 @@ def squad(name=None):
     user_id=f.read()
     f.close()
     error = ""
-    cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player"))
+    cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player"))
     if request.method == 'POST':
         try:
             name = request.form['send_button']
@@ -67,17 +67,19 @@ def squad(name=None):
             cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, a[0])))
         else:
             if name2 == "Name":
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by name ASC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by name ASC")
             elif name2 == 'Matches':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by matches DESC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by matches DESC")
             elif name2 == 'Average':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by average DESC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by average DESC")
             elif name2 == 'Strike Rate':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by strike_rate DESC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by strike_rate DESC")
             elif name2 == 'Wickets':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by wickets DESC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by wickets DESC")
             elif name2 == 'Economy':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by eco ASC")
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by eco ASC")
+            elif name2 == 'Price':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco, price from player order by price DESC")
         cursor1.execute(("commit;"))
     rows = [i for i in cursor]
     cursor1.execute(("select player_id from userplayer where user_id = '{}';".format(user_id)))

@@ -34,11 +34,12 @@ def logout(name=None):
 
 @app.route('/squadselect.html', methods=['POST', 'GET'])
 def squad(name=None):
+    date = "2017-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')
     f=open("current_user.txt","r")
     user_id=f.read()
     f.close()
     error = ""
-    cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player"))
+    cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}');".format(date,date)))
     if request.method == 'POST':
         try:
             name = request.form['send_button']
@@ -67,27 +68,21 @@ def squad(name=None):
             cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, a[0])))
         else:
             if name2 == "Name":
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by name ASC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by name ASC".format(date,date)))
             elif name2 == 'Matches':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by matches DESC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by matches DESC".format(date,date)))
             elif name2 == 'Average':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by average DESC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by average DESC".format(date,date)))
             elif name2 == 'Strike Rate':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by strike_rate DESC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by strike_rate DESC".format(date,date)))
             elif name2 == 'Wickets':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by wickets DESC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by wickets DESC".format(date,date)))
             elif name2 == 'Economy':
-                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by eco ASC")
+                cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by eco ASC".format(date,date)))
         cursor1.execute(("commit;"))
     rows = [i for i in cursor]
-    cursor1.execute(("select player_id from userplayer where user_id = '{}';".format(user_id)))
-    ida = [str(k[0]) for k in cursor1]
-    ids = ','.join(ida)
-    if ids:
-        cursor1.execute(("select name, price from player where player_id in ({});".format(ids)))  
-        rows1 = [j for j in cursor1]
-    else:
-        rows1 = []
+    cursor1.execute(("select name, price from player where player_id in (select player_id from userplayer where user_id= '{}');".format(user_id)))
+    rows1 = [j for j in cursor1]
     return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error)
 
 @app.route('/price.html')

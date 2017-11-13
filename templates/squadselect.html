@@ -34,6 +34,12 @@
 			border: none;
 			position: fixed;
 		}
+		.button2 {
+		background-color: #1A5BE8;
+		color: white;
+		cursor: pointer;
+		font-size: 15;
+		}
 	</style>
 	</head>
 	<body bgcolor="#D3D3D3">	
@@ -47,8 +53,10 @@
 		<div id='parent' style="width: 100%'; overflow: hidden;">
 			<div id = 'leftbox' class="child" style="width: 750px; float: left;">
 				
+		<form action="/squadselect.html" method="POST">
 		<table style="width:100%" align="center" border=1>
 			<tr>
+				<th>Select Player</th>
 				<th>Name</th>
 				<th>Matches</th>
 				<th>Average</th>
@@ -58,7 +66,7 @@
 			</tr>
 			{% for row in rows %}
 			<tr align="center">
-				
+				<td><input class="button2" name ="send_button" type="submit" value="Select {{ row[0] }}" style="width:100%"></td>
 				<td> {{ row[0] }}</td>
 				<td> {{ row[1] }}</td>
 				<td> {{ row[2] }} </td>
@@ -68,6 +76,7 @@
 			</tr>
 			{% endfor %}
 		</table>
+		</form>
 
 			</div>
 			<div id = 'rightbox' class="child" style="margin-left: 770px;">
@@ -75,6 +84,20 @@
 					Selected Players
 				</h2>
 			
+		<form action="/squadselect.html" method="POST">
+		<table style="width:100%" align="center" border=1>
+			<tr>
+				<th>Name</th>
+				<th>Price</th>
+			</tr>
+			{% for row in rows1 %}
+			<tr align="center">
+				<td> {{ row[0] }}</td>
+				<td> {{ row[1] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		</form>
 
 			</div>
 		</div>

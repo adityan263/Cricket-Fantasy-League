@@ -26,6 +26,12 @@
 		cursor: pointer;
 		font-size: 15;
 		}
+		.button2 {
+		background-color: #1A5BE8;
+		color: white;
+		cursor: pointer;
+		font-size: 15;
+		}
 	</style>
 	</head>
 	<body>	
@@ -43,15 +49,15 @@
 		</h2>
 		</center>
 			<a href="price.html" class="button"> Batting Statistics </a>
+		<form action="/bowling.html" method="POST">
 		<table style="width:100%" align="center" border=1>
 			<tr>
-				<th>Name</th>
-				<th>Matches</th>
-				<th>Wickets</th>
-				<th>Economy</th>
-				<th>4 wicket haul</th>
-				<th>5 wicket haul</th>
-				<th>Price</th>
+				<th><input class="button2" name ="send_button" type="submit" value="Name" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Matches" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Wickets" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Economy" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="4 Wicket Hauls" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="5 Wicket Hauls" style="width:100%"></th>
 			</tr>
 			{% for row in rows %}
 			<tr align="center">
@@ -61,13 +67,9 @@
 				<td> {{ row[3] }} </td>
 				<td> {{ row[4] }} </td>
 				<td> {{ row[5] }} </td>
-				<td> {{ row[6] }} </td>
-<!--				<td> {{ row[7] }} </td>
-				<td> {{ row[8] }} </td>
-				<td> {{ row[9] }} </td>
-				<td> {{ row[10]}} </td> -->
 			</tr>
 			{% endfor %}
 		</table>
+		</form>
 	</body>
 </html>

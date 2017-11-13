@@ -3,8 +3,10 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
-conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
-        password="Cricket.1")
+#conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
+#        password="Cricket.1")
+conn = mysql.connector.connect(database="python_mysql", user="root", host="127.0.0.1",
+        password="vivbhav97")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
 #Even if previous user didn't logout, current_user will be cleared.
@@ -25,11 +27,40 @@ def logout(name=None):
     f.close() #redirect to login page 
     return render_template('login.html', name=name)
 
-@app.route('/price.html')
+@app.route('/squadselect.html')
+def squad(name=None):
+    return render_template('squadselect.html', name=name)
+
+@app.route('/try.html')
+def tryial(name=None):
+    return render_template('try.html', name=name)
+
+@app.route('/try.html', methods=['POST', 'GET'])
+def trying(name=None):
+    ab = 'ab';
+    if request.method == 'POST':
+        ab = request.form['but']
+    else:
+        ab = "not working"
+    print (ab)
+    if ab == 'Batting':
+        return ("Batting")
+    elif ab == 'Bowling':
+        return ("Bowling")
+    else: 
+        return ("None of above")
+
+@app.route('/price.html', methods=['POST', 'GET'])
 def plist(name=None):
     cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
+
+@app.route('/bowling.html', methods=['POST', 'GET'])
+def bowl(name=None):
+    cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player")
+    rows = [i for i in cursor]
+    return render_template('bowling.html', name=name, rows=rows)
 
 @app.route('/administrator.html')
 def ulist(name=None):

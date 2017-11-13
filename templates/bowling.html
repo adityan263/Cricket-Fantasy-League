@@ -42,20 +42,16 @@
 			(Please note that this is just a list of all the players. To add any of these players to your squad or be able to change and edit your squad, go back to the Main Menu and select the 'Edit Squad' option.)		
 		</h2>
 		</center>
-		<a href="bowling.html" class="button"> Bowling Statistics </a>
+			<a href="price.html" class="button"> Batting Statistics </a>
 		<table style="width:100%" align="center" border=1>
 			<tr>
 				<th>Name</th>
-				<th>Batting Style</th>
 				<th>Matches</th>
-				<th>Runs</th>
-				<th>Highest Score</th>
-				<th>Average</th>
-				<th>Strike Rate</th>
-				<th>Hundreds</th>
-				<th>Fifties</th>
-				<th>Fours</th>
-				<th>Sixes</th>
+				<th>Wickets</th>
+				<th>Economy</th>
+				<th>4 wicket haul</th>
+				<th>5 wicket haul</th>
+				<th>Price</th>
 			</tr>
 			{% for row in rows %}
 			<tr align="center">
@@ -66,10 +62,10 @@
 				<td> {{ row[4] }} </td>
 				<td> {{ row[5] }} </td>
 				<td> {{ row[6] }} </td>
-				<td> {{ row[7] }} </td>
+<!--				<td> {{ row[7] }} </td>
 				<td> {{ row[8] }} </td>
 				<td> {{ row[9] }} </td>
-				<td> {{ row[10]}} </td>
+				<td> {{ row[10]}} </td> -->
 			</tr>
 			{% endfor %}
 		</table>

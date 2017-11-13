@@ -3,10 +3,10 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
-#conn = mysql.connector.connect(database="cricket", user="project", host="127.0.0.1",
-#        password="Cricket.1")
-conn = mysql.connector.connect(database="python_mysql", user="root", host="127.0.0.1",
-        password="vivbhav97")
+try:
+    conn = mysql.connector.connect(database="cricket", user="project",host="127.0.0.1",password="Cricket.1")
+except:
+    conn = mysql.connector.connect(database="python_mysql", user="root",host="127.0.0.1",password="vivbhav97")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
 #Even if previous user didn't logout, current_user will be cleared.
@@ -41,12 +41,12 @@ def squad(name=None):
         a = cursor1.fetchone()
         cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
     cursor1.execute(("select player_id from userplayer where user_id = '{}';".format(user_id)))
-    ida = [str(k[1]) for k in cursor1]
+    ida = [str(k[0]) for k in cursor1]
     ids = ','.join(ida)
     print(ida)
     print(ids)
     if ids:
-        cursor1.execute(("select name, price from player where player_id in {};".format(ids)))  
+        cursor1.execute(("select name, price from player where player_id in ({});".format(ids)))  
         rows1 = [j for j in cursor1]
     else:
         rows1 = []

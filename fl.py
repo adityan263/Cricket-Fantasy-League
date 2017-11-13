@@ -29,26 +29,13 @@ def logout(name=None):
 
 @app.route('/squadselect.html')
 def squad(name=None):
-    return render_template('squadselect.html', name=name)
+    cursor.execute("select name, matches, average, strike_rate, wickets, eco from player")
+    rows = [i for i in cursor]
+    return render_template('squadselect.html', name=name, rows = rows)
 
 @app.route('/try.html')
 def tryial(name=None):
     return render_template('try.html', name=name)
-
-@app.route('/try.html', methods=['POST', 'GET'])
-def trying(name=None):
-    ab = 'ab';
-    if request.method == 'POST':
-        ab = request.form['but']
-    else:
-        ab = "not working"
-    print (ab)
-    if ab == 'Batting':
-        return ("Batting")
-    elif ab == 'Bowling':
-        return ("Bowling")
-    else: 
-        return ("None of above")
 
 @app.route('/price.html', methods=['POST', 'GET'])
 def plist(name=None):

@@ -9,7 +9,7 @@ DROP TABLE groups;
 DROP TABLE team;
 DROP TABLE users;
 DROP TABLE ground;
-
+DROP TABLE userplayer;
 
 
 CREATE TABLE users(                                                 
@@ -142,4 +142,7 @@ CREATE TABLE match_player_bat(
 	FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
 	FOREIGN KEY (player_id) REFERENCES player(player_id),
 	FOREIGN KEY (dismissal_id) REFERENCES dismissal (dismissal_id)
-)
+);
+
+create table userplayer (user_id INT, player_id INT, primary key (user_id, player_id), foreign key (player_id) references player(player_id) on delete cascade, foreign key (user_id) references users(user_id) on delete cascade);
+

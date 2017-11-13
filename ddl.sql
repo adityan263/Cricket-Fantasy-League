@@ -19,7 +19,8 @@ CREATE TABLE users(
 	email VARCHAR(20) NOT NULL,
 	favteam VARCHAR(20) NOT NULL,                          
 	username VARCHAR(20) NOT NULL,
-	password VARCHAR(20) NOT NULL 
+	password VARCHAR(20) NOT NULL,
+	budget INT NOT NULL
 );
 
 CREATE TABLE team(

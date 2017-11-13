@@ -40,6 +40,9 @@ def squad(name=None):
     f.close()
     error = ""
     cursor.execute(("select name, matches, average, strike_rate, wickets,eco,price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}');".format(date,date)))
+    cursor1.execute(("select budget from users where user_id = {};".format(user_id)))
+    b = cursor1.fetchone()
+    budget = b[0]
     if request.method == 'POST':
         try:
             name = request.form['send_button']
@@ -55,7 +58,12 @@ def squad(name=None):
             cursor1.execute(("select player_id, price from player where name = '{}';".format(name)))
             a = cursor1.fetchone()
             try:
-                cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
+                if budget - int(a[1]) >= 0:
+                    cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
+                    budget -= int(a[1])
+                    cursor1.execute(("update users set budget={} where user_id = {};".format(str(budget), user_id)))
+                else:
+                    error = "Budget is insufficient"
             except mysql.connector.Error as err:
                 if err[0] == 1062:#error number
                     error = "Player already selected"
@@ -63,9 +71,15 @@ def squad(name=None):
                     error = "You can select at the most 10 players"
         elif name1:
             name = name1[7:]
-            cursor1.execute(("select player_id from player where name = '{}';".format(name)))
+            cursor1.execute(("select player_id, price from player where name = '{}';".format(name)))
             a = cursor1.fetchone()
-            cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, a[0])))
+            add = int(a[1])
+            p_id = a[0]
+            cursor1.execute(("select * from userplayer where user_id={} and player_id={};".format(user_id, p_id)))
+            if cursor1.fetchone():
+                cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, p_id)))
+                budget += add
+                cursor1.execute(("update users set budget={} where user_id = {};".format(str(budget), user_id)))
         else:
             if name2 == "Name":
                 cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by name ASC".format(date,date)))
@@ -85,7 +99,7 @@ def squad(name=None):
     rows = [i for i in cursor]
     cursor1.execute(("select name, price from player where player_id in (select player_id from userplayer where user_id= '{}');".format(user_id)))
     rows1 = [j for j in cursor1]
-    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error)
+    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error, budget = budget)
 
 @app.route('/price.html')
 def plist(name=None):
@@ -230,7 +244,7 @@ def registration_page_post(name=None):
     cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
-        cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
+        cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam, budget) values('{}', '{}', '{}', '{}', '{}', '{}', 1300000);".format(username, password,firstname,lastname, email, favteam)))
         cursor.execute(("select user_id from users where username ='{}';".format(username)))
         a = cursor.fetchone()
         f=open("current_user.txt","w")

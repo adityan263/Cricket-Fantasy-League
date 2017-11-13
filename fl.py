@@ -3,6 +3,8 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
+
+login_needed=0
 try:
     conn = mysql.connector.connect(database="cricket", user="project",host="127.0.0.1",password="Cricket.1")
 except:
@@ -11,7 +13,10 @@ cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
 #Even if previous user didn't logout, current_user will be cleared.
 f=open("current_user.txt","w")
-f.write("0")
+if login_needed:
+    f.write("0")
+else:
+    f.write("1")
 f.close()
 
 @app.route('/')
@@ -50,8 +55,11 @@ def squad(name=None):
             a = cursor1.fetchone()
             try:
                 cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
-            except:
-                error = "You can select at the most 10 players"
+            except mysql.connector.Error as err:
+                if err[0] == 1062:#error number
+                    error = "Player already selected"
+                else:#1644
+                    error = "You can select at the most 10 players"
         elif name1:
             name = name1[7:]
             cursor1.execute(("select player_id from player where name = '{}';".format(name)))
@@ -82,7 +90,7 @@ def squad(name=None):
         rows1 = []
     return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error)
 
-@app.route('/price.html', methods=['POST', 'GET'])
+@app.route('/price.html')
 def plist(name=None):
     cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
@@ -202,11 +210,23 @@ def registration_page(name=None):
 @app.route('/registration.html', methods=['POST','GET'])
 def registration_page_post(name=None):
     firstname = request.form['firstname']
+    if not firstname:
+        return  render_template('registration.html', name=name,error="Enter firstname")
     lastname = request.form['lastname']
+    if not lastname:
+        return  render_template('registration.html', name=name,error="Enter lastname")
     username = request.form['username']
+    if not username:
+        return  render_template('registration.html', name=name,error="Enter username")
     email = request.form['emailid']
+    if not email:
+        return  render_template('registration.html', name=name,error="Enter email-id")
     favteam = request.form['favouriteteam']
+    if not favteam:
+        return  render_template('registration.html', name=name,error="Enter name of your favourite team")
     password = request.form['password']
+    if not password:
+        return  render_template('registration.html', name=name,error="Password not entered")
     cpassword = request.form['cpassword']
     if password != cpassword:
         return  render_template('registration.html', name=name,error="Passwords do not match")

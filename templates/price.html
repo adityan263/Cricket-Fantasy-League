@@ -26,6 +26,12 @@
 		cursor: pointer;
 		font-size: 15;
 		}
+		.button2 {
+		background-color: #1A5BE8;
+		color: white;
+		cursor: pointer;
+		font-size: 15;
+		}
 	</style>
 	</head>
 	<body>	
@@ -42,19 +48,20 @@
 			(Please note that this is just a list of all the players. To add any of these players to your squad or be able to change and edit your squad, go back to the Main Menu and select the 'Edit Squad' option.)		
 		</h2>
 		</center>
+                <form action="/price.html" method="POST">
 		<table style="width:100%" align="center" border=1>
 			<tr>
-				<th>Name</th>
-				<th>Batting Style</th>
-				<th>Matches</th>
-				<th>Runs</th>
-				<th>Highest Score</th>
-				<th>Average</th>
-				<th>Strike Rate</th>
-				<th>Hundreds</th>
-				<th>Fifties</th>
-				<th>Fours</th>
-				<th>Sixes</th>
+				<th><input class="button2" name ="send_button" type="submit" value="Name" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Batting Style" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Matches" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Runs" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Highest Score" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Average" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Strike Rate" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Hundreds" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Fifties" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Fours" style="width:100%"></th>
+				<th><input class="button2" name ="send_button" type="submit" value="Sixes" style="width:100%"></th>
 			</tr>
 			{% for row in rows %}
 			<tr align="center">
@@ -72,5 +79,6 @@
 			</tr>
 			{% endfor %}
 		</table>
+		</form>
 	</body>
 </html>

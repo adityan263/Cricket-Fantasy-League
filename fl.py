@@ -32,25 +32,55 @@ def squad(name=None):
     f=open("current_user.txt","r")
     user_id=f.read()
     f.close()
+    error = ""
     cursor.execute(("select name, matches, average, strike_rate, wickets, eco from player"))
-    rows = [i for i in cursor]
     if request.method == 'POST':
-        name = request.form['send_button']
-        name = name[7:]
-        cursor1.execute(("select player_id, price from player where name = '{}';".format(name)))
-        a = cursor1.fetchone()
-        cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
+        try:
+            name = request.form['send_button']
+        except:
+            try:
+                name1 = request.form['send_button1']
+                name = ""
+            except:
+                name1 = name = ""
+                name2 = request.form['send_button2']
+        if name:
+            name = name[7:]
+            cursor1.execute(("select player_id, price from player where name = '{}';".format(name)))
+            a = cursor1.fetchone()
+            try:
+                cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
+            except:
+                error = "You can select at the most 10 players"
+        elif name1:
+            name = name1[7:]
+            cursor1.execute(("select player_id from player where name = '{}';".format(name)))
+            a = cursor1.fetchone()
+            cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, a[0])))
+        else:
+            if name2 == "Name":
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by name ASC")
+            elif name2 == 'Matches':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by matches DESC")
+            elif name2 == 'Average':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by average DESC")
+            elif name2 == 'Strike Rate':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by strike_rate DESC")
+            elif name2 == 'Wickets':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by wickets DESC")
+            elif name2 == 'Economy':
+                cursor.execute("select name, matches, average, strike_rate, wickets, eco from player order by eco ASC")
+        cursor1.execute(("commit;"))
+    rows = [i for i in cursor]
     cursor1.execute(("select player_id from userplayer where user_id = '{}';".format(user_id)))
     ida = [str(k[0]) for k in cursor1]
     ids = ','.join(ida)
-    print(ida)
-    print(ids)
     if ids:
         cursor1.execute(("select name, price from player where player_id in ({});".format(ids)))  
         rows1 = [j for j in cursor1]
     else:
         rows1 = []
-    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1)
+    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error)
 
 @app.route('/price.html', methods=['POST', 'GET'])
 def plist(name=None):
@@ -160,7 +190,6 @@ def login_page_post(name=None):
         f=open("current_user.txt","w")
         f.write(str(a[1]))
         f.close()
-        print("user_id is"+str(a[1]))
         return render_template('home.html', name=name)
     else:
         return  render_template('login.html', name=name,error2="Incorrect Password",error1="")
@@ -185,13 +214,15 @@ def registration_page_post(name=None):
     a = cursor.fetchone()
     if not a:
         cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam) values('{}','{}','{}','{}','{}','{}');".format(username, password,firstname,lastname, email, favteam)))
-        cursor.execute(("commit;"))
         cursor.execute(("select user_id from users where username ='{}';".format(username)))
         a = cursor.fetchone()
         f=open("current_user.txt","w")
         f.write(str(a[0]))
         f.close()
-        print("user_id is"+str(a[0]))
+        cursor.execute(("delimiter //"))
+        cursor.execute(("""create trigger t{} before insert on userplayer for each row begin if (select count(player_id) from userplayer where user_id = {} group by user_id) > 9 then signal sqlstate "10000" set message_text = 'no';end if; end//""".format(str(a[0]),str(a[0]))))
+        cursor.execute(("delimiter ;"))
+        cursor.execute(("commit;"))
         return render_template('home.html', name=name)
     else:
         return  render_template('registration.html', name=name,error="Username is already taken!")

@@ -57,12 +57,12 @@
 		<table style="width:100%" align="center" border=1>
 			<tr>
 				<th>Select Player</th>
-				<th>Name</th>
-				<th>Matches</th>
-				<th>Average</th>
-				<th>Strike Rate</th>
-				<th>Wickets</th>
-				<th>Economy</th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Name" style="width:100%"></th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Matches" style="width:100%"></th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Average" style="width:100%"></th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Strike Rate" style="width:100%"></th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Wickets" style="width:100%"></th>
+				<th><input class="button2" name ="send_button2" type="submit" value="Economy" style="width:100%"></th>
 			</tr>
 			{% for row in rows %}
 			<tr align="center">
@@ -83,15 +83,17 @@
 				<h2>
 					Selected Players
 				</h2>
-			
+		<br><font color="red">{{error}}</font><br>
 		<form action="/squadselect.html" method="POST">
-		<table style="width:100%; position: fixed;" align="center" border=1>
+		<table style="width:100%" align="center" border=1>
 			<tr>
+				<th>Remove Player</th>
 				<th>Name</th>
 				<th>Price</th>
 			</tr>
 			{% for row in rows1 %}
 			<tr align="center">
+				<td><input class="button2" name ="send_button1" type="submit" value="Remove {{ row[0] }}" style="width:100%"></td>
 				<td> {{ row[0] }}</td>
 				<td> {{ row[1] }}</td>
 			</tr>

@@ -437,3 +437,12 @@ def playerall(name=None):
             j += 1
             bowl.append(i)
     return render_template('playerall.html', name=name, bat = bat, bowl = bowl, pname = p1)
+
+@app.route('/groups.html', methods=['POST','GET'])
+def groups(name=None):
+    f=open("current_user.txt","r")
+    user_id=f.read()
+    f.close()
+    cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
+    groups = [i for i in cursor]
+    return render_template('groups.html', name=name, groups = groups)

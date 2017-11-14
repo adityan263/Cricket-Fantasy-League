@@ -20,7 +20,8 @@ CREATE TABLE users(
 	favteam VARCHAR(20) NOT NULL,                          
 	username VARCHAR(20) NOT NULL,
 	password VARCHAR(20) NOT NULL,
-	budget INT NOT NULL
+	budget INT NOT NULL,
+	points INT NOT NULL
 );
 
 CREATE TABLE team(

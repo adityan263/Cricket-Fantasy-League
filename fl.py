@@ -28,6 +28,26 @@ def login_page(name=None):
 def stats(name=None):
     return render_template('statistics.html', name=name)
 
+@app.route('/playervsplayer.html', methods=['POST', 'GET'])
+def pvsp(name=None):
+    if request.method == 'POST':
+        player1 = request.form['player1']
+        player2 = request.form['player2']
+        cursor.execute(("select * from player where name in ('{}', '{}');".format(player1, player2)))
+        rows = [i for i in cursor]
+    else:
+        rows = [['-'] * 17]*2           
+    return render_template('playervsplayer.html', name=name, row = rows)
+
+"""@app.route('/teamvsteam.html', methods=['POST', 'GET'])
+def tvst(name=None):
+    if request.method == 'POST':
+        team1 = request.form['team1']
+        team2 = request.form['team2']
+        cursor.execute(("select team_id from team where name = '{}';".format(team1)))
+        team1 = cursor.fetchone()
+        cursor.execute(("
+"""
 #just add a logout button and add link /logout.html
 @app.route('/logout.html')
 def logout(name=None):
@@ -136,7 +156,7 @@ def batlist(name=None):
     elif request.form['send_button'] == 'Sixes':
         cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by sixes DESC")
     else:
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
+        cursor.execute("select name, batstyle, matches, run`s, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 

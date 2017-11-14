@@ -28,89 +28,55 @@
 		font-size: 15;
 		}
 
-		body, html {
+		.small-image {
 			width: 100%;
-			height: 100%;
-		  margin: 0;
-}
-
-.container {
-  width: 100%;
-  height: 100%;
-}
-
-.leftpane {
-    width: 25%;
-    height: 100%;
-    float: left;
-/*    background-color: rosybrown;
-    border-collapse: collapse;*/
-}
-
-.middlepane {
-    width: 50%;
-    height: 100%;
-    float: left;
-/*    background-color: royalblue;
-    border-collapse: collapse;*/
-}
-
-.rightpane {
-  width: 25%;
-  height: 100%;
-  position: relative;
-  float: right;
-/*  background-color: yellow;
-  border-collapse: collapse;*/
-}
-
-.toppane {
-  width: 100%;
-  height: 100px;
-/*  border-collapse: collapse;
-  background-color: #4da6ff;*/
-}
-
-
+			height: 200px;
+		}
 	</style>
 	</head>
 	<body bgcolor="#D3D3D3">	
+		<div style="background-color:#1A5BE8; width: 100%; height: 50px; border: none;"> 
+			<button class="button1"> Live Matches </button>	 
+			<button class="button1"> Current Series </button>
+			<button class="button1"> Upcoming Series </button>
+			<button class="button1"> Top Players </button>
+		</div>
+		<div style="width: 100%; height: 240px; border: none; overflow: hidden;">
 
-	
-		<div class="container">
-			<div class="toppane">
-				<img src="/static/stylesheets/home.png" width="1200">
-			</div>
-
-			<div class="leftpane">
-				<div class="image">
-					<img src="/static/selectsquad.png" height="250" width="400">
+			<div style="width: 70%; height: 240px; border: none; overflow: hidden; float: left;">
+				<div style="width: 49%; float: left;">
+					<img src="/static/selectsquad.jpeg" class="small-image">
+					<input class="button2" name ="send_button2" type="submit" value="Select Squad">
 				</div>
-				<div class="button">
-					<center>
-						<a href="selectsquad.html" class="button"> Select Squad </a>
-					</center>
+		
+				<div style="width: 49%; float: right; right: 100px">
+					<img src="/static/playerlist.jpeg" class="small-image">
+					<input class="button2" name ="send_button2" type="submit" value="Player's List">
 				</div>
 			</div>
-			<div class="middlepane">
-				<div class="image">
-					<img src="/static/playerlist.jpeg" height="250" width="400">
-				</div>
-				<div class="button">
-					<center>
-						<a href="price.html" class="button"> Player's List </a>
-					</center>
-				</div>
-			</div>
-			<div class="rightpane">
-				<div class="image">
-					<img src="/static/schedule.jpeg" height="250" width="400">
-				</div>
-				<div class="button">
-					<a href="schedule.html" class="button"> Schedule </a>			
-				</div>			
+			<div style="width: 30%; float: right; border: none; overflow: hidden;">
+				<img src="/static/schedule.jpeg" class="small-image">
+				<input class="button2" name ="send_button2" type="submit" value="Schedule">
 			</div>
 		</div>
 
+		<div style="width: 100%; height: 240px; border: none; overflow: hidden;">
+
+			<div style="width: 70%; height: 240px; border: none; overflow: hidden; float: left;">
+				<div style="width: 49%; float: left;">
+					<img src="/static/faq.jpeg" class="small-image">
+					<input class="button2" name ="send_button2" type="submit" value="FAQ">
+				</div>
+		
+				<div style="width: 49%; float: right; right: 100px">
+					<img src="/static/stats2.jpeg" class="small-image">
+					<input class="button2" name ="send_button2" type="submit" value="Statistics">
+				</div>
+			</div>
+			<div style="width: 30%; float: right; border: none; overflow: hidden;">
+				<img src="/static/stats.jpeg" class="small-image">
+				<input class="button2" name ="send_button2" type="submit" value="Player's Each Match Data">
+			</div>
+	
 	</body>
 </html>

@@ -28,6 +28,18 @@ def login_page(name=None):
 def stats(name=None):
     return render_template('statistics.html', name=name)
 
+@app.route('/groupleaderboard.html', methods=['POST', 'GET'])
+    a = []
+    if request.method == 'POST':
+        grpname = request.form['groupname']
+        cursor.execute(("select groups_id from groups where groupname = '{}';".format(grpname)))
+        a = cursor.fetchone()
+        gid = a[0]
+        cursor.execute(("select username, points from users where users_id in (select users_id from user_group where group_id = {}) order by points desc;".format(gid)))
+        a = [i for i in cursor]
+    return render_template('groupleaderboard.html', name=name, a = a)    
+         
+
 @app.route('/playervsplayer.html', methods=['POST', 'GET'])
 def pvsp(name=None):
     if request.method == 'POST':
@@ -321,7 +333,7 @@ def addto_group_page(name=None):
 @app.route('/addtogroup.html', methods=['POST','GET'])
 def addto_group(name=None):
     username = request.form['username']
-    grpname="sdf"#get it from html page
+    grpname = request.form['groupname']
     cursor.execute(("select user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:

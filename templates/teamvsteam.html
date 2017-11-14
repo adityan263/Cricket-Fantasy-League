@@ -40,16 +40,26 @@
 		cursor: pointer;
 		font-size: 15;
 		}
+		body {
+		background-image: url("/static/background.jpg");
+		background-size: cover;
+		background-repeat: no-repeat;
+    		background-attachment: fixed;
+		}
+		.table1 {
+		width: 30%;
+		background: rgba(255,255,255,0.65);
+		}
 	</style>
 	</head>
-	<body bgcolor="#D3D3D3">	
+	<body bgcolor="#D3D3D3" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF">	
 		<div class = "div1">
-		<button class="button1"> Live Matches </button>	 
-		<button class="button1"> Current Series </button>
-		<button class="button1"> Upcoming Series </button>
-		<button class="button1"> Top Players </button>
+		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Live Matches </a></button>	 
+		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Current Series </a></button>
+		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Upcoming Series </a></button>
+		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Top Players </a></button>
 		</div>
-		<center><br><br><br><br><br>
+		<center><br><br><br><font color="red">{{ error }}</font><br><br>
 		<form action="/teamvsteam.html" method="POST">
 			<input type="text" placeholder="Team 1 Name" name="t1" style="width: 200px; font-size: 20">
 			vs 
@@ -63,7 +73,7 @@
 		<br><br><br>
 		{% for row in rows %}
 		Match {{ row[0][0] }}
-		<table style="width:75%" align="center" border=1>
+		<table style="width:75%" align="center" border=1 class="table1">
 			<tr>
 				<th> {{ name1 }} </th>
   				<th> Team </th>
@@ -90,6 +100,7 @@
 				<td> {{ row[1][5] + row[1][6] + row[1][7] + row[1][8] }} </td>
 			</tr>
 		</table>
-		{%  endfor %}	
+		{%  endfor %}
+		<center><a href="statistics.html" class="button"> Back </a></center>	
 	</body>
 </html>

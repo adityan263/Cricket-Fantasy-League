@@ -26,26 +26,48 @@ def login_page(name=None):
 
 @app.route('/statistics.html')
 def stats(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     return render_template('statistics.html', name=name)
 
 @app.route('/groupleaderboard.html', methods=['POST', 'GET'])
 def grleader(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     a = []
     if request.method == 'POST':
         grpname = request.form['groupname']
-        cursor.execute(("select groups_id from groups where groupname = '{}';".format(grpname)))
+        if not grpname:
+            return render_template('groupleaderboard.html', name=name, a = a, error="enter group name")
+        cursor.execute(("select group_id from groups where groupname = '{}';".format(grpname)))
         a = cursor.fetchone()
         gid = a[0]
-        cursor.execute(("select username, points from users where users_id in (select users_id from user_group where group_id = {}) order by points desc;".format(gid)))
+        cursor.execute(("select username, points from users where user_id in (select user_id from user_group where group_id = {}) order by points desc;".format(gid)))
         a = [i for i in cursor]
     return render_template('groupleaderboard.html', name=name, a = a)    
          
 
 @app.route('/playervsplayer.html', methods=['POST', 'GET'])
 def pvsp(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     if request.method == 'POST':
         player1 = request.form['player1']
         player2 = request.form['player2']
+        if not player1 or not player2:
+            return render_template('playervsplayer.html', name=name, row = [['-'] * 17]*2, error = "Enter names of both players")
         cursor.execute(("select * from player where name in ('{}', '{}');".format(player1, player2)))
         rows = [i for i in cursor]
     else:
@@ -62,6 +84,12 @@ def logout(name=None):
 
 @app.route('/topplayers.html')
 def topplay(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     cursor.execute(("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by runs desc limit 20"))
     rows = [i for i in cursor]
     cursor1.execute(("select name, wickets, eco, fourhaul, fivehaul from player order by wickets desc limit 20"))
@@ -70,10 +98,13 @@ def topplay(name=None):
 
 @app.route('/squadselect.html', methods=['POST', 'GET'])
 def squad(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        user_id = int(f.read())
+        f.close()
+        if not user_id:
+            return render_template('login.html', name=name)
     date = "2017-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')
-    f=open("current_user.txt","r")
-    user_id=f.read()
-    f.close()
     error = ""
     cursor.execute(("select name, matches, average, strike_rate, wickets,eco,price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}');".format(date,date)))
     cursor1.execute(("select budget from users where user_id = {};".format(user_id)))
@@ -139,12 +170,24 @@ def squad(name=None):
 
 @app.route('/price.html')
 def plist(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 
 @app.route('/price.html', methods=['POST','GET'])
 def batlist(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     if request.form['send_button'] == 'Name':
         cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by name ASC")
     elif request.form['send_button'] == 'Batting Style':
@@ -174,6 +217,12 @@ def batlist(name=None):
 
 @app.route('/bowling.html', methods=['POST', 'GET'])
 def bowl(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     if request.method == "POST":
         if request.form['send_button'] == 'Name':
             cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by name asc")
@@ -194,43 +243,38 @@ def bowl(name=None):
 
 @app.route('/administrator.html')
 def ulist(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if u != 1:
+            return render_template('login.html', name=name)
     cursor.execute("select * from users;")
     rows = [i for i in cursor]
     return render_template('administrator.html', name=name, rows=rows)
 
 @app.route('/schedule.html')
-def sched(name=None):    
+def sched(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     date = datetime.datetime.today().strftime('%Y-%m-%d')
-
-    cursor1.execute("""select team1_id, team2_id, dates, ground_id from matches where dates > '%s';""" % (date))
-    ans = []
-    new = cursor1.fetchone()
-    while new:
-        a = []
-        team1 = new[0]
-        team2 = new[1]
-        ground = new[3]
-        cursor.execute("""select name from team where team_id = '%d';""" %(team1))
-        t = cursor.fetchone()
-        a.append(t[0])
-
-        cursor.execute("""select name from team where team_id = '%d';""" %(team2))
-        t = cursor.fetchone()
-        a.append(t[0])
-
-        a.append(new[2])
-
-        cursor.execute("""select name from ground where ground_id = '%d';""" %(ground))
-        t = cursor.fetchone()
-        a.append(t[0])
-        ans.append(a)
-        new = cursor1.fetchone()
-
+    cursor1.execute("""select t1.name, t2.name, matches.dates, ground.name from matches join ground on ground.ground_id = matches.ground_id join team as t1 on matches.team1_id = t1.team_id join team as t2 on matches.team2_id = t2.team_id order by matches.dates;""")
+    ans = [i for i in cursor1]
     return render_template('schedule.html', name=name, ans=ans)
 
 
 @app.route('/home.html')
 def matchinfo(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     return render_template('home.html', name=name)
 
 @app.route('/', methods=['POST','GET'])
@@ -295,7 +339,7 @@ def registration_page_post(name=None):
 @app.route('/creategroup.html')
 def create_group_page(name=None):
     f=open("current_user.txt","r")
-    user_id=f.read()
+    user_id=int(f.read())
     f.close()
     if not user_id:
         return render_template('login.html', name=name)
@@ -304,6 +348,8 @@ def create_group_page(name=None):
 @app.route('/creategroup.html', methods=['POST','GET'])
 def create_group(name=None):
     grpname = request.form['grpname']
+    if not grpname:
+        return render_template('creategroup.html', name=name,error="Enter group name!")
     cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
     a = cursor.fetchone()
     if a:
@@ -314,7 +360,7 @@ def create_group(name=None):
     a = cursor.fetchone()
     group_id = a[0]
     f=open("current_user.txt","r")
-    user_id=f.read()
+    user_id=int(f.read())
     f.close()
     cursor.execute(("insert into user_group(user_id, group_id) values('{}','{}');".format(user_id, group_id)))
     cursor.execute(("commit;"))
@@ -323,7 +369,7 @@ def create_group(name=None):
 @app.route('/addtogroup.html')
 def addto_group_page(name=None):
     f=open("current_user.txt","r")
-    user_id=f.read()
+    user_id=int(f.read())
     f.close()
     if not user_id:
         return render_template('login.html', name=name)
@@ -331,8 +377,16 @@ def addto_group_page(name=None):
 
 @app.route('/addtogroup.html', methods=['POST','GET'])
 def addto_group(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     username = request.form['username']
     grpname = request.form['groupname']
+    if not username or not grpname:
+        return render_template('addtogroup.html', name=name,error="Enter both values")
     cursor.execute(("select user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
@@ -341,7 +395,10 @@ def addto_group(name=None):
         uid = a[0]
     cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
     a = cursor.fetchone()
-    gid = a[0]
+    if not a:
+        return render_template('addtogroup.html', name=name,error="Invalid groupname")
+    else:
+        gid = a[0]
     cursor.execute(("select * from user_group where (user_id='{}' and group_id='{}');".format(uid,gid)))
     a = cursor.fetchone()
     if a:
@@ -352,18 +409,32 @@ def addto_group(name=None):
 
 @app.route('/teamvsteam.html', methods=['POST','GET'])
 def tvst(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     c = 0
     rows = []
     t1 = t2 = ""
     if request.method == 'POST':
         t1 = request.form['t1']
         t2 = request.form['t2']
+        if not t1 or not t2:
+            return render_template('teamvsteam.html', name=name, rows = rows, count = c, name1 = t1, name2 = t2, error="Enter both names!")
         cursor.execute(("select team_id from team where name='{}'".format(t1)))
         a = cursor.fetchone()
-        t1i = a[0]
+        if not a:
+            return render_template('teamvsteam.html', name=name, rows = rows, count = c, name1 = t1, name2 = t2, error="Invalid team1 name")
+        else:
+            t1i = a[0]
         cursor.execute(("select team_id from team where name='{}'".format(t2)))
         a = cursor.fetchone()
-        t2i = a[0]
+        if not a:
+            return render_template('teamvsteam.html', name=name, rows = rows, count = c, name1 = t1, name2 = t2, error="Invalid team2 name")
+        else:
+            t2i = a[0]
         cursor.execute(("select match_id from matches where ((team1_id={} and team2_id={}) or (team1_id={} and team2_id={}))".format(t1i, t2i, t2i, t1i)))
         cur = cursor.fetchall()
         print(cur)
@@ -376,17 +447,31 @@ def tvst(name=None):
 
 @app.route('/playerground.html', methods=['POST','GET'])
 def playerground(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     name = p1= c1 =""
     bat = bowl = []
     if request.method == 'POST':
         p1 = request.form['p1']
         c1 = request.form['c1']
+        if not p1 or not c1:
+            return render_template('playerground.html', name=name, bat = bat, bowl = bowl, nam = p1, error="Enter both values")
         cursor.execute(("select ground_id from ground where city='{}'".format(c1)))
         a = cursor.fetchone()
-        gid = a[0]
+        if not a:
+            return render_template('playerground.html', name=name, bat = bat, bowl = bowl, nam = p1, error="Invalid city name")
+        else:
+            gid = a[0]
         cursor.execute(("select player_id from player where name='{}'".format(p1)))
         a = cursor.fetchone()
-        pid = a[0]
+        if not a:
+            return render_template('playerground.html', name=name, bat = bat, bowl = bowl, nam = p1, error="Invalid city name")
+        else:
+            pid = a[0]
         cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where ground_id = {})".format(pid, gid)))
         bat = [i for i in cursor]
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where ground_id = {})".format(pid, gid)))
@@ -395,17 +480,31 @@ def playerground(name=None):
 
 @app.route('/playerteam.html', methods=['POST','GET'])
 def playerteam(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     name = p1= t1 =""
     bat = bowl = []
     if request.method == 'POST':
         p1 = request.form['p1']
         t1 = request.form['t1']
+        if not p1 or not t1:
+            return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1, error="Enter both values")
         cursor.execute(("select team_id from team where name='{}'".format(t1)))
         a = cursor.fetchone()
-        tid = a[0]
+        if not a:
+            return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1, error="Invalid team name")
+        else:
+            tid = a[0]
         cursor.execute(("select player_id from player where name='{}'".format(p1)))
         a = cursor.fetchone()
-        pid = a[0]
+        if not a:
+            return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1, error="Invalid player name")
+        else:
+            pid = a[0]
         cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
         bat = [i for i in cursor]
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
@@ -414,17 +513,25 @@ def playerteam(name=None):
 
 @app.route('/playerall.html', methods=['POST','GET'])
 def playerall(name=None):
+    if login_needed:
+        f=open("current_user.txt","r")
+        u = int(f.read())
+        f.close()
+        if not u:
+            return render_template('login.html', name=name)
     name = p1 = ""
     bat = []
     bowl = []
     if request.method == 'POST':
         p1 = request.form['p1']
+        if not p1:
+            return render_template('playerall.html', name=name, bat = bat, bowl = bowl, pname = p1, error="Enter player name")
         cursor.execute(("select player_id from player where name='{}'".format(p1)))
         a = cursor.fetchone()
-        if a:
-            pid = a[0]
+        if not a:
+            return render_template('playerall.html', name=name, bat = bat, bowl = bowl, pname = p1, error="Invalid player name")
         else:
-            pid = 0
+            pid = a[0]
         cursor.execute(("select team2_id from matches where team1_id=(select team_id from player where player_id = {})".format(pid)))
         tids = [str(i)[1] for i in cursor]
         cursor.execute(("select team1_id from matches where team2_id=(select team_id from player where player_id = {})".format(pid)))
@@ -452,7 +559,7 @@ def playerall(name=None):
 @app.route('/groups.html', methods=['POST','GET'])
 def groups(name=None):
     f=open("current_user.txt","r")
-    user_id=f.read()
+    user_id=int(f.read())
     f.close()
     cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
     groups = [str(i)[3:-3] for i in cursor]

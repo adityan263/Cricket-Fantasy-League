@@ -392,3 +392,28 @@ def playerteam(name=None):
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
         bowl = [i for i in cursor]
     return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1)
+
+@app.route('/playerall.html', methods=['POST','GET'])
+def playerall(name=None):
+    name = p1 = ""
+    bat = bowl = []
+    if request.method == 'POST':
+        p1 = request.form['p1']
+        cursor.execute(("select player_id from player where name='{}'".format(p1)))
+        a = cursor.fetchone()
+        pid = a[0]
+        cursor.execute(("select name from team where team_id in (select team1_id from matches where team2_id = {}) or team_id in(select team1_id from matches where team1_id = {})"))
+        teams = [i for i in cursor]
+        cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        j = 0
+        for i in cursor:
+            i.append(team[j])
+            bat.append(i)
+            j += 1
+        cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        j = 0
+        for i in cursor:
+            i.append(team[j])
+            bowl.append(i)
+            j += 1
+    return render_template('playerall.html', name=name, bat = bat, bowl = bowl, pname = p1)

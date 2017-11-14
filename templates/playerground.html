@@ -50,7 +50,7 @@
 		<button class="button1"> Top Players </button>
 		</div>
 		<center><br><br><br>
-		<form action="/teamvsteam.html" method="POST">
+		<form action="/playerground.html" method="POST">
 			<input type="text" placeholder="Player Name" name="p1" style="width: 200px; font-size: 20">
 			vs 
 			<input type="text" placeholder="City" name="c1" style="width: 200px; font-size: 20">
@@ -70,7 +70,7 @@
 		</tr>
 		{% for row in bat %}
 		<tr>
-			<td> {{ name }} </td>
+			<td> {{ nam }} </td>
 			<td> {{ row[2] }} </td>
 			<td> {{ row[3] }} </td>
 			<td> {{ row[4] }} </td>
@@ -93,7 +93,7 @@
 		</tr>
 		{% for row in bowl %}
 		<tr>
-			<td> {{ name }} </td>
+			<td> {{ nam }} </td>
 			<td> {{ row[2] }} </td>
 			<td> {{ row[3] }} </td>
 			<td> {{ row[4] }} </td>

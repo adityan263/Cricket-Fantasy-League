@@ -357,19 +357,19 @@ def tvst(name=None):
 
 @app.route('/playerground.html', methods=['POST','GET'])
 def playerground(name=None):
-    name = ""
+    name = p1= c1 =""
     bat = bowl = []
     if request.method == 'POST':
         p1 = request.form['p1']
-        c2 = request.form['c1']
-        cursor.execute(("select ground_id from team where city='{}'".format(c1)))
+        c1 = request.form['c1']
+        cursor.execute(("select ground_id from ground where city='{}'".format(c1)))
         a = cursor.fetchone()
         gid = a[0]
-        cursor.execute(("select player from team where name='{}'".format(p1)))
+        cursor.execute(("select player_id from player where name='{}'".format(p1)))
         a = cursor.fetchone()
         pid = a[0]
         cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where ground_id = {})".format(pid, gid)))
         bat = [i for i in cursor]
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where ground_id = {})".format(pid, gid)))
         bowl = [i for i in cursor]
-    return render_template('teamvsteam.html', name=name, bat = bat, bowl = bowl, name = p1)
+    return render_template('playerground.html', name=name, bat = bat, bowl = bowl, nam = p1)

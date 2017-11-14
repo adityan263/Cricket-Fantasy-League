@@ -39,15 +39,6 @@ def pvsp(name=None):
         rows = [['-'] * 17]*2           
     return render_template('playervsplayer.html', name=name, row = rows)
 
-"""@app.route('/teamvsteam.html', methods=['POST', 'GET'])
-def tvst(name=None):
-    if request.method == 'POST':
-        team1 = request.form['team1']
-        team2 = request.form['team2']
-        cursor.execute(("select team_id from team where name = '{}';".format(team1)))
-        team1 = cursor.fetchone()
-        cursor.execute(("
-"""
 #just add a logout button and add link /logout.html
 @app.route('/logout.html')
 def logout(name=None):

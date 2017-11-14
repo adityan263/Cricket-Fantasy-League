@@ -47,6 +47,14 @@ def logout(name=None):
     f.close() #redirect to login page 
     return render_template('login.html', name=name)
 
+@app.route('/topplayers.html')
+def topplay(name=None):
+    cursor.execute(("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by runs desc limit 20"))
+    rows = [i for i in cursor]
+    cursor1.execute(("select name, wickets, eco, fourhaul, fivehaul from player order by wickets desc limit 20"))
+    rows1 = [i for i in cursor1]
+    return render_template('topplayers.html', name=name, rows = rows, rows1 = rows1)
+
 @app.route('/squadselect.html', methods=['POST', 'GET'])
 def squad(name=None):
     date = "2017-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')

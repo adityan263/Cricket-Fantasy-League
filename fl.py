@@ -396,24 +396,36 @@ def playerteam(name=None):
 @app.route('/playerall.html', methods=['POST','GET'])
 def playerall(name=None):
     name = p1 = ""
-    bat = bowl = []
+    bat = []
+    bowl = []
     if request.method == 'POST':
         p1 = request.form['p1']
         cursor.execute(("select player_id from player where name='{}'".format(p1)))
         a = cursor.fetchone()
-        pid = a[0]
-        cursor.execute(("select name from team where team_id in (select team1_id from matches where team2_id = {}) or team_id in(select team1_id from matches where team1_id = {})"))
-        teams = [i for i in cursor]
-        cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        if a:
+            pid = a[0]
+        else:
+            pid = 0
+        cursor.execute(("select team2_id from matches where team1_id=(select team_id from player where player_id = {})".format(pid)))
+        tids = [str(i)[1] for i in cursor]
+        cursor.execute(("select team1_id from matches where team2_id=(select team_id from player where player_id = {})".format(pid)))
+        for i in cursor:
+            tids.append(int(str(i)[1]))
+        tn = []
+        for i in tids:
+            cursor.execute(("select name from team where team_id = {}".format(i)))
+            a = cursor.fetchone()
+            tn.append(str(a[0]))
+        cursor.execute(("select * from match_player_bat where player_id={}".format(pid)))
         j = 0
         for i in cursor:
-            i.append(team[j])
+            i = i + (tn[j],)
+            j += 1
             bat.append(i)
-            j += 1
-        cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        cursor1.execute(("select * from match_player_bowl where player_id={}".format(pid)))
         j = 0
-        for i in cursor:
-            i.append(team[j])
-            bowl.append(i)
+        for i in cursor1:
+            i = i + (tn[j],)
             j += 1
+            bowl.append(i)
     return render_template('playerall.html', name=name, bat = bat, bowl = bowl, pname = p1)

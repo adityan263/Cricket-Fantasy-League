@@ -24,6 +24,10 @@ f.close()
 def login_page(name=None):
     return render_template('login.html', name=name)
 
+@app.route('/statistics.html')
+def stats(name=None):
+    return render_template('statistics.html', name=name)
+
 #just add a logout button and add link /logout.html
 @app.route('/logout.html')
 def logout(name=None):

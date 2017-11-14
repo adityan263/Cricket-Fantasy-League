@@ -50,18 +50,16 @@
 		<button class="button1"> Top Players </button>
 		</div>
 		<center><br><br><br><br><br>
-		<form action="/playerteam.html" method="POST">
+		<form action="/playerall.html" method="POST">
 			<input type="text" placeholder="Player Name" name="p1" style="width: 200px; font-size: 20">
-			vs 
-			<input type="text" placeholder="Team Name" name="t1" style="width: 200px; font-size: 20">
-			<br> <br><br>
-			<input class="button" name="submit" type="submit" value="Compare" style="width: 200px">
+			<input class="button" name="submit" type="submit" value="Show All Data" style="width: 200px">
 		</form>
 		</center>
 		<br><br><br>
 		<table style="width:75%" align="center" border=1>
 		<tr>
 			<th> Name </th>
+			<th> Against </th>
 			<th> Runs </th>
 			<th> Balls </th>
 			<th> Fours </th>
@@ -71,6 +69,7 @@
 		{% for row in bat %}
 		<tr>
 			<td> {{ pname }} </td>
+			<td> {{ row[11] }} </td>
 			<td> {{ row[2] }} </td>
 			<td> {{ row[3] }} </td>
 			<td> {{ row[4] }} </td>
@@ -84,6 +83,7 @@
 		<table style="width:75%" align="center" border=1>
 		<tr>
 			<th> Name </th>
+			<th> Against </th>
 			<th> Overs </th>
 			<th> Maidens </th>
 			<th> Runs </th>
@@ -94,6 +94,7 @@
 		{% for row in bowl %}
 		<tr>
 			<td> {{ pname }} </td>
+			<td> {{ row[9] }} </td>
 			<td> {{ row[2] }} </td>
 			<td> {{ row[3] }} </td>
 			<td> {{ row[4] }} </td>

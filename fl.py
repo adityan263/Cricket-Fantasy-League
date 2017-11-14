@@ -391,4 +391,4 @@ def playerteam(name=None):
         bat = [i for i in cursor]
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
         bowl = [i for i in cursor]
-    return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1, tname= t1)
+    return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1)

@@ -330,3 +330,27 @@ def addto_group(name=None):
     cursor.execute(("insert into user_group values('{}','{}');".format(uid,gid)))
     cursor.execute(("commit;"))
     return render_template('addtogroup.html', name=name)
+
+@app.route('/teamvsteam.html', methods=['POST','GET'])
+def tvst(name=None):
+    c = 0
+    rows = []
+    t1 = t2 = ""
+    if request.method == 'POST':
+        t1 = request.form['t1']
+        t2 = request.form['t2']
+        cursor.execute(("select team_id from team where name='{}'".format(t1)))
+        a = cursor.fetchone()
+        t1i = a[0]
+        cursor.execute(("select team_id from team where name='{}'".format(t2)))
+        a = cursor.fetchone()
+        t2i = a[0]
+        cursor.execute(("select match_id from matches where ((team1_id={} and team2_id={}) or (team1_id={} and team2_id={}))".format(t1i, t2i, t2i, t1i)))
+        cur = cursor.fetchall()
+        print(cur)
+        for i in cur:
+            cursor.execute(("select * from match_team_performance where match_id = {}".format(int(i[0]))))
+            row = [j for j in cursor]
+            rows.append(row)
+            c += 1
+    return render_template('teamvsteam.html', name=name, rows = rows, count = c, name1 = t1, name2 = t2)

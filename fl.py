@@ -373,3 +373,22 @@ def playerground(name=None):
         cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where ground_id = {})".format(pid, gid)))
         bowl = [i for i in cursor]
     return render_template('playerground.html', name=name, bat = bat, bowl = bowl, nam = p1)
+
+@app.route('/playerteam.html', methods=['POST','GET'])
+def playerteam(name=None):
+    name = p1= t1 =""
+    bat = bowl = []
+    if request.method == 'POST':
+        p1 = request.form['p1']
+        t1 = request.form['t1']
+        cursor.execute(("select team_id from team where name='{}'".format(t1)))
+        a = cursor.fetchone()
+        tid = a[0]
+        cursor.execute(("select player_id from player where name='{}'".format(p1)))
+        a = cursor.fetchone()
+        pid = a[0]
+        cursor.execute(("select * from match_player_bat where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        bat = [i for i in cursor]
+        cursor.execute(("select * from match_player_bowl where player_id={} and match_id in (select match_id from matches where team1_id = {} or team2_id = {})".format(pid, tid, tid)))
+        bowl = [i for i in cursor]
+    return render_template('playerteam.html', name=name, bat = bat, bowl = bowl, pname = p1, tname= t1)

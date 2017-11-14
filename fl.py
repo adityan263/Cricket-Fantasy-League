@@ -4,7 +4,7 @@ app = Flask(__name__)
 import datetime
 import mysql.connector
 
-login_needed=0
+login_needed=1
 try:
     conn = mysql.connector.connect(database="cricket", user="project",host="127.0.0.1",password="Cricket.1")
 except:
@@ -29,6 +29,7 @@ def stats(name=None):
     return render_template('statistics.html', name=name)
 
 @app.route('/groupleaderboard.html', methods=['POST', 'GET'])
+def grleader(name=None):
     a = []
     if request.method == 'POST':
         grpname = request.form['groupname']
@@ -279,15 +280,13 @@ def registration_page_post(name=None):
     cursor.execute(("select password from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
-        cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam, budget) values('{}', '{}', '{}', '{}', '{}', '{}', 1300000);".format(username, password,firstname,lastname, email, favteam)))
+        cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam, budget, points) values('{}', '{}', '{}', '{}', '{}', '{}', 1300000, 0);".format(username, password,firstname,lastname, email, favteam)))
         cursor.execute(("select user_id from users where username ='{}';".format(username)))
         a = cursor.fetchone()
         f=open("current_user.txt","w")
         f.write(str(a[0]))
         f.close()
-        cursor.execute(("delimiter //"))
-        cursor.execute(("""create trigger t{} before insert on userplayer for each row begin if (select count(player_id) from userplayer where user_id = {} group by user_id) > 9 then signal sqlstate "10000" set message_text = 'no';end if; end//""".format(str(a[0]),str(a[0]))))
-        cursor.execute(("delimiter ;"))
+        #cursor.execute(("""delimiter // create trigger t{} before insert on userplayer for each row begin if (select count(player_id) from userplayer where user_id = {} group by user_id) > 9 then signal sqlstate "10000" set message_text = 'no';end if; end // delimiter ;""".format(str(a[0]),str(a[0]))))
         cursor.execute(("commit;"))
         return render_template('home.html', name=name)
     else:
@@ -340,12 +339,12 @@ def addto_group(name=None):
         return render_template('addtogroup.html', name=name,error="Invalid username")
     else:
         uid = a[0]
-    cursor.execute(("select group_id from group where groupname='{}';".format(grpname)))
+    cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
     a = cursor.fetchone()
     gid = a[0]
     cursor.execute(("select * from user_group where (user_id='{}' and group_id='{}');".format(uid,gid)))
     a = cursor.fetchone()
-    if not a:
+    if a:
         return render_template('addtogroup.html', name=name,error="User is already part of group!")
     cursor.execute(("insert into user_group values('{}','{}');".format(uid,gid)))
     cursor.execute(("commit;"))
@@ -456,5 +455,5 @@ def groups(name=None):
     user_id=f.read()
     f.close()
     cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
-    groups = [i for i in cursor]
+    groups = [str(i)[3:-3] for i in cursor]
     return render_template('groups.html', name=name, groups = groups)

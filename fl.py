@@ -170,6 +170,7 @@ def squad(name=None):
     cursor1.execute(("select runs, wickets from player where player_id in(select player_id from userplayer where user_id = {})".format(user_id)))
     for a in cursor1:
         p += (a[0] + a[1]*10)/100
+    cursor1.execute("UPDATE users set points = {} where user_id = {}".format(p, user_id))
     return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error, budget = budget, p = p)
 
 @app.route('/price.html')

@@ -564,3 +564,7 @@ def groups(name=None):
     cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
     groups = [str(i)[3:-3] for i in cursor]
     return render_template('groups.html', name=name, groups = groups)
+
+@app.route('/faq.html')
+def faq(name=None):
+    return render_template('faq.html', name=name)

@@ -110,6 +110,7 @@ def squad(name=None):
     cursor1.execute(("select budget from users where user_id = {};".format(user_id)))
     b = cursor1.fetchone()
     budget = b[0]
+    p = 0
     if request.method == 'POST':
         try:
             name = request.form['send_button']
@@ -166,7 +167,10 @@ def squad(name=None):
     rows = [i for i in cursor]
     cursor1.execute(("select name, price from player where player_id in (select player_id from userplayer where user_id= '{}');".format(user_id)))
     rows1 = [j for j in cursor1]
-    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error, budget = budget)
+    cursor1.execute(("select runs, wickets from player where player_id in(select player_id from userplayer where user_id = {})".format(user_id)))
+    for a in cursor1:
+        p += (a[0] + a[1]*10)/100
+    return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error, budget = budget, p = p)
 
 @app.route('/price.html')
 def plist(name=None):

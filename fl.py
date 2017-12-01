@@ -11,13 +11,11 @@ except:
     conn = mysql.connector.connect(database="python_mysql", user="root",host="127.0.0.1",password="vivbhav97")
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
-#Even if previous user didn't logout, current_user will be cleared.
-f=open("current_user.txt","w")
+#Even if previous user didn't logout, user_id will reset.
 if login_needed:
-    f.write("0")
+    user_id = 0
 else:
-    f.write("1")
-f.close()
+    user_id = 1
 
 @app.route('/')
 @app.route('/login.html')
@@ -26,21 +24,17 @@ def login_page(name=None):
 
 @app.route('/statistics.html')
 def stats(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     return render_template('statistics.html', name=name)
 
 @app.route('/groupleaderboard.html', methods=['POST', 'GET'])
 def grleader(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     a = []
     if request.method == 'POST':
@@ -57,11 +51,9 @@ def grleader(name=None):
 
 @app.route('/playervsplayer.html', methods=['POST', 'GET'])
 def pvsp(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     if request.method == 'POST':
         player1 = request.form['player1']
@@ -77,18 +69,15 @@ def pvsp(name=None):
 #just add a logout button and add link /logout.html
 @app.route('/logout.html')
 def logout(name=None):
-    f=open("current_user.txt","w")
-    f.write("0")
-    f.close() #redirect to login page 
+    global user_id 
+    user_id = 0 #redirect to login page 
     return render_template('login.html', name=name)
 
 @app.route('/topplayers.html')
 def topplay(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     cursor.execute(("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by runs desc limit 20"))
     rows = [i for i in cursor]
@@ -98,10 +87,8 @@ def topplay(name=None):
 
 @app.route('/squadselect.html', methods=['POST', 'GET'])
 def squad(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        user_id = int(f.read())
-        f.close()
         if not user_id:
             return render_template('login.html', name=name)
     date = "2017-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')
@@ -175,11 +162,9 @@ def squad(name=None):
 
 @app.route('/price.html')
 def plist(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
     rows = [i for i in cursor]
@@ -187,11 +172,9 @@ def plist(name=None):
 
 @app.route('/price.html', methods=['POST','GET'])
 def batlist(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     if request.form['send_button'] == 'Name':
         cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by name ASC")
@@ -222,11 +205,9 @@ def batlist(name=None):
 
 @app.route('/bowling.html', methods=['POST', 'GET'])
 def bowl(name=None):
+    global user_id
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     if request.method == "POST":
         if request.form['send_button'] == 'Name':
@@ -248,11 +229,9 @@ def bowl(name=None):
 
 @app.route('/administrator.html')
 def ulist(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if u != 1:
+        if user_id != 1:
             return render_template('login.html', name=name)
     cursor.execute("select * from users;")
     rows = [i for i in cursor]
@@ -260,11 +239,9 @@ def ulist(name=None):
 
 @app.route('/schedule.html')
 def sched(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     date = datetime.datetime.today().strftime('%Y-%m-%d')
     cursor1.execute("""select t1.name, t2.name, matches.dates, ground.name from matches join ground on ground.ground_id = matches.ground_id join team as t1 on matches.team1_id = t1.team_id join team as t2 on matches.team2_id = t2.team_id order by matches.dates;""")
@@ -274,26 +251,23 @@ def sched(name=None):
 
 @app.route('/home.html')
 def matchinfo(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     return render_template('home.html', name=name)
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login.html', methods=['POST','GET'])
 def login_page_post(name=None):
+    global user_id 
     username, password = request.form['username'],request.form['password']
     cursor.execute(("select password, user_id from users where username ='{}';".format(username)))
     a = cursor.fetchone()
     if not a:
         return render_template('login.html', name=name,error1="Incorrect username",error2="")
     if a[0] == password:
-        f=open("current_user.txt","w")
-        f.write(str(a[1]))
-        f.close()
+        user_id = int(a[1])
         return render_template('home.html', name=name)
     else:
         return  render_template('login.html', name=name,error2="Incorrect Password",error1="")
@@ -305,6 +279,7 @@ def registration_page(name=None):
 
 @app.route('/registration.html', methods=['POST','GET'])
 def registration_page_post(name=None):
+    global user_id 
     firstname = request.form['firstname']
     if not firstname:
         return  render_template('registration.html', name=name,error="Enter firstname")
@@ -332,9 +307,7 @@ def registration_page_post(name=None):
         cursor.execute(("insert into users(username, password,firstname,lastname, email, favteam, budget, points) values('{}', '{}', '{}', '{}', '{}', '{}', 1300000, 0);".format(username, password,firstname,lastname, email, favteam)))
         cursor.execute(("select user_id from users where username ='{}';".format(username)))
         a = cursor.fetchone()
-        f=open("current_user.txt","w")
-        f.write(str(a[0]))
-        f.close()
+        user_id = int(a[0])
         #cursor.execute(("""delimiter // create trigger t{} before insert on userplayer for each row begin if (select count(player_id) from userplayer where user_id = {} group by user_id) > 9 then signal sqlstate "10000" set message_text = 'no';end if; end // delimiter ;""".format(str(a[0]),str(a[0]))))
         cursor.execute(("commit;"))
         return render_template('home.html', name=name)
@@ -343,15 +316,14 @@ def registration_page_post(name=None):
 
 @app.route('/creategroup.html')
 def create_group_page(name=None):
-    f=open("current_user.txt","r")
-    user_id=int(f.read())
-    f.close()
+    global user_id 
     if not user_id:
         return render_template('login.html', name=name)
     return render_template('creategroup.html', name=name)
 
 @app.route('/creategroup.html', methods=['POST','GET'])
 def create_group(name=None):
+    global user_id 
     grpname = request.form['grpname']
     if not grpname:
         return render_template('creategroup.html', name=name,error="Enter group name!")
@@ -364,29 +336,22 @@ def create_group(name=None):
     cursor.execute(("select group_id from groups where groupname='{}';".format(grpname)))
     a = cursor.fetchone()
     group_id = a[0]
-    f=open("current_user.txt","r")
-    user_id=int(f.read())
-    f.close()
     cursor.execute(("insert into user_group(user_id, group_id) values('{}','{}');".format(user_id, group_id)))
     cursor.execute(("commit;"))
     return render_template('addtogroup.html', name=name)
 
 @app.route('/addtogroup.html')
 def addto_group_page(name=None):
-    f=open("current_user.txt","r")
-    user_id=int(f.read())
-    f.close()
+    global user_id 
     if not user_id:
         return render_template('login.html', name=name)
     return render_template('addtogroup.html', name=name)
 
 @app.route('/addtogroup.html', methods=['POST','GET'])
 def addto_group(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     username = request.form['username']
     grpname = request.form['groupname']
@@ -414,11 +379,9 @@ def addto_group(name=None):
 
 @app.route('/teamvsteam.html', methods=['POST','GET'])
 def tvst(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     c = 0
     rows = []
@@ -452,11 +415,9 @@ def tvst(name=None):
 
 @app.route('/playerground.html', methods=['POST','GET'])
 def playerground(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     name = p1= c1 =""
     bat = bowl = []
@@ -485,11 +446,9 @@ def playerground(name=None):
 
 @app.route('/playerteam.html', methods=['POST','GET'])
 def playerteam(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     name = p1= t1 =""
     bat = bowl = []
@@ -518,11 +477,9 @@ def playerteam(name=None):
 
 @app.route('/playerall.html', methods=['POST','GET'])
 def playerall(name=None):
+    global user_id 
     if login_needed:
-        f=open("current_user.txt","r")
-        u = int(f.read())
-        f.close()
-        if not u:
+        if not user_id:
             return render_template('login.html', name=name)
     name = p1 = ""
     bat = []
@@ -563,9 +520,7 @@ def playerall(name=None):
 
 @app.route('/groups.html', methods=['POST','GET'])
 def groups(name=None):
-    f=open("current_user.txt","r")
-    user_id=int(f.read())
-    f.close()
+    global user_id 
     cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
     groups = [str(i)[3:-3] for i in cursor]
     return render_template('groups.html', name=name, groups = groups)

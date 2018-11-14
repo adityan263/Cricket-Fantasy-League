@@ -1,0 +1,2 @@
+Create suitable database. Source 'ddl.sql' for database setup.
+Run teams.py, player.py, match.py, batting.py, bowling.py, Performance.py in that order.

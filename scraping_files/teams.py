@@ -78,7 +78,11 @@ def Team(url):
 
 def connect() :
 	#db = python_mysql_dbconfig.read_db_config()
+<<<<<<< d92e127f91f6a654068ec037be68e215bb3204a5
 	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+=======
+	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'password')
+>>>>>>> Fixed scraping code
 	cursor = conn.cursor()
 	i = 1
 	for url in urls:

@@ -243,7 +243,11 @@ def Batting(url, cursor):
 
 def connect() :	
 	#Connect to Database
+<<<<<<< d92e127f91f6a654068ec037be68e215bb3204a5
 	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+=======
+	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'username', password = 'password')
+>>>>>>> Fixed scraping code
 	cursor = conn.cursor(buffered = True)
 	cursor.execute("select match_id from matches order by match_id limit 1")
 	match_id = cursor.fetchone()[0]

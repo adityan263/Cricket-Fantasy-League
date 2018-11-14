@@ -74,7 +74,11 @@ def Player(url):
 	return(player)
 
 def connect() :	
+<<<<<<< d92e127f91f6a654068ec037be68e215bb3204a5
 	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+=======
+	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'password')
+>>>>>>> Fixed scraping code
 	cursor = conn.cursor()
 	team_id = 1
 	for teams in urls:

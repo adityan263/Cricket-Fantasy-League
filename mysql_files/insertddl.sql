@@ -1,26 +1,22 @@
-insert into dismissal values (1, 'caught');
-insert into dismissal (dismissal_name) values ('caught');
-update dismissal set dismissal_name='bowled' where dismissal_id = 1;
-insert into dismissal (dismissal_name) values ('run out');
-insert into dismissal (dismissal_name) values ('hit wicket');
-insert into dismissal (dismissal_name) values ('obs.field');
-insert into dismissal (dismissal_name) values ('stumped');
+insert into dismissal values (0, 'Not Out');
+insert into dismissal values (1, 'Caught');
+insert into dismissal values (2, 'Run Out');
+insert into dismissal values (3, 'LBW');
+insert into dismissal values (4, 'Bowled');
+insert into dismissal values (5, 'Stumped');
 
-insert into ground values (1, 'Wankhede Stadium', 'Mumbai', 'India', 30000);
-insert into ground values (2, 'Gahunje Stadium MCA', 'Pune', 'India', 25000);
-insert into ground values (3, 'Feroz Shah Kotla', 'New Delhi', 'India', 31000);
+insert into ground values (1, 'M. A. Chidambaram Stadium', 'Chennai', 'India', 30000);
+insert into ground values (2, 'Feroz Shah Kotla Ground', 'New Delhi', 'India', 31000);
+insert into ground values (3, 'IS Bindra Stadium', 'Chandigarh', 'India', 31000);
 insert into ground values (4, 'Eden Gardens', 'Kolkata', 'India', 50000);
-insert into ground values (5, 'Chidambaram Stadium', 'Chennai', 'India', 20000);
-insert into ground values (6, 'Braborne Stadium', 'Mumbai', 'India', 22000);
-insert into ground values (7, 'Green Park Stadium', 'Kanpur', 'India', 25000);
-insert into ground values (8, 'Chinnaswamy Stadium', 'Bengaluru', 'India', 23000);
-insert into ground values (10, 'Sawai Mansingh Stadium', 'Bengaluru', 'India'
-insert into ground values (11, 'Punjab CA Stadium', 'Bengaluru', 'India', 27000);
+insert into ground values (5, 'Wankhede Stadium', 'Mumbai', 'India', 30000);
+insert into ground values (6, 'Sawai Mansingh Stadium', 'Jaipur', 'India', 22000);
+insert into ground values (7, 'M. Chinnaswamy Stadium', 'Bengaluru', 'India', 25000);
+insert into ground values (8, 'Rajiv Gandhi International Stadium', 'Hydrabad', 'India', 23000);
 insert into ground values (9, 'Sardar Patel Stadium', 'Bengaluru', 'India', 23000);
+insert into ground values (10, 'Gahunje Stadium MCA', 'Pune', 'India', 25000);
+insert into ground values (11, 'Punjab CA Stadium', 'Bengaluru', 'India', 27000);
 insert into ground values (12, 'Vidarbha CA Stadium', 'Nagpur', 'India', 24000);
-update ground set city='Ahemdabad' where ground_id = 9;
-update ground set city='Jaipur' where ground_id = 10;
-update ground set city='Chandigarh' where ground_id = 11;
 insert into ground values (13, 'Saurashtra CA', 'Rajkot', 'India', 20000);
 
 insert into ground values (14, 'Melbourne CG', 'Melbourne', 'Australia', 75000);
@@ -52,13 +48,3 @@ insert into ground values (37, 'Asgiriya Stadium', 'Kandy', 'Sri Lanka', 5000);
 insert into ground values (38, 'Colombo Cricket', 'Colombo', 'Sri Lanka', 6000);
 insert into ground values (39, 'Dubai International', 'Dubai', 'UAE', 26000);
 insert into ground values (40, 'Sharjah Cricket', 'Sharjah', 'UAE', 35000);
-insert into ground values (41, 'Uppal', 'Hyderabad', 'India', 40000);
-
-insert into team values (1, 'MI', 14, 10, 20);
-insert into team values (2, 'RPS', 14, 9, 18);
-insert into team values (3, 'SRH', 14, 8, 17);
-insert into team values (4, 'KKR', 14, 8, 16);
-insert into team values (5, 'KP', 14, 7, 14);
-insert into team values (6, 'DD', 14, 6, 12);
-insert into team values (7, 'GL', 14, 4, 8);
-insert into team values (8, 'RCB', 14, 3, 7);

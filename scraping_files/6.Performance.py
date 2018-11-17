@@ -18,7 +18,7 @@ def matches(url, cursor):
 	team_list = []
 	count = 0
 	for name in soup.find_all('a', {'class' : 'app_partial'}):
-                for teams in name.find_all('span', {'class' : 'cscore_name cscore_name--long'}):
+		for teams in name.find_all('span', {'class' : 'cscore_name cscore_name--long'}):
 			count += 1
 			if count > 2:
 				break
@@ -99,8 +99,10 @@ def matches(url, cursor):
 	return (total_list)
 
 def connect() :	
-	#Connect to Database
-	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'password')
+	try:
+		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+	except:
+		conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
 	cursor = conn.cursor()
 	cursor.execute("select match_id from matches order by match_id limit 1")
 	match_id = cursor.fetchone()[0]

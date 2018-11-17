@@ -150,6 +150,7 @@ update player set price = 75000  where player_id = 000+148;
 update player set price = 100000 where player_id = 000+149;
 update player set price = 125000 where player_id = 000+150;
 update player set price = 100000 where player_id = 000+150;
+/*
 update player set price = 100000 where player_id = 000+151;
 update player set price = 150000 where player_id = 000+152;
 update player set price = 100000 where player_id = 000+153;
@@ -161,4 +162,5 @@ update player set price = 100000 where player_id = 000+158;
 update player set price = 125000 where player_id = 000+159;
 update player set price = 125000 where player_id = 000+160;
 update player set price = 125000 where player_id = 000+161;
+*/
 

@@ -2,15 +2,14 @@ DROP TABLE match_team_performance;
 DROP TABLE match_player_bat;
 DROP TABLE match_player_bowl;
 DROP TABLE dismissal;
-DROP TABLE player;
-DROP TABLE user_group;
 DROP TABLE matches;
-DROP TABLE groups;
-DROP TABLE team;
-DROP TABLE users;
 DROP TABLE ground;
+DROP TABLE user_group;
+DROP TABLE groups;
 DROP TABLE userplayer;
-
+DROP TABLE users;
+DROP TABLE player;
+DROP TABLE team;
 
 CREATE TABLE users(                                                 
 	user_id INT PRIMARY KEY AUTO_INCREMENT,

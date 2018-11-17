@@ -172,6 +172,20 @@ def find_name(batsman, players, cursor):
 		batsman = 'Colin de Grandhomme'
 	elif 'UT Yadav' in batsman:
 		batsman = 'Umesh Yadav'
+	elif 'CJ Anderson' in batsman:
+		batsman = 'Corey Anderson'
+	elif 'F du Plessis' in batsman:
+		batsman = 'Faf du Plessis'
+	elif 'P Negi' in batsman:
+		batsman = 'Pavan Negi'
+	elif 'M Ashwin' in batsman:
+		batsman = 'Murugan Ashwin'
+	elif 'IS Sodhi' in batsman:
+		batsman = 'Ish Sodhi'
+	elif 'P Chopra' in batsman:
+		batsman = 'Prashant Chopra'
+	elif 'MK Lomror' in batsman:
+		batsman = 'Mahipal Lomror'
 	name = ''
 	for player in players:
 		if batsman in player[0]:
@@ -204,7 +218,7 @@ def Batting(url, cursor):
 	team_list = []
 	count = 0
 	for name in soup.find_all('a', {'class' : 'app_partial'}):
-                for teams in name.find_all('span', {'class' : 'cscore_name cscore_name--long'}):
+		for teams in name.find_all('span', {'class' : 'cscore_name cscore_name--long'}):
 			count += 1
 			if count > 2:
 				break
@@ -241,13 +255,11 @@ def Batting(url, cursor):
 	return(final)
 
 
-def connect() :	
-	#Connect to Database
-<<<<<<< d92e127f91f6a654068ec037be68e215bb3204a5
-	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
-=======
-	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'username', password = 'password')
->>>>>>> Fixed scraping code
+def connect() :
+	try:
+		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+	except:
+		conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
 	cursor = conn.cursor(buffered = True)
 	cursor.execute("select match_id from matches order by match_id limit 1")
 	match_id = cursor.fetchone()[0]
@@ -265,11 +277,15 @@ def connect() :
 					continue
 				player_ids.append(items[i][0])
 				data.append(row)
-			cursor.executemany("INSERT INTO match_player_bat VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",data)
+			try:
+				cursor.executemany("INSERT INTO match_player_bat VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",data)
+			except:
+				print(data,"foreign key prob")
 			match_id += 1
 			conn.commit()
 	cursor.close()
 	conn.close()
+
 
 connect()
 

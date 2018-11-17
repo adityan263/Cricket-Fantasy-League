@@ -2,6 +2,9 @@ from mysql.connector import MySQLConnection, Error
 import bs4
 import requests 
 import unicodedata
+import sys
+sys.path.append("../")
+import config
 #import python_mysql_dbconfig 
 
 urls = ['https://www.iplt20.com/teams/chennai-super-kings', 'http://www.iplt20.com/teams/delhi-daredevils', 'http://www.iplt20.com/teams/kings-xi-punjab', 'http://www.iplt20.com/teams/kolkata-knight-riders', 'http://www.iplt20.com/teams/mumbai-indians', 'https://www.iplt20.com/teams/rajasthan-royals', 'http://www.iplt20.com/teams/royal-challengers-bangalore', 'http://www.iplt20.com/teams/sunrisers-hyderabad']   
@@ -80,7 +83,7 @@ def connect() :
 	try:
 		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
 	except:
-		conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
+		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	cursor = conn.cursor()
 	i = 1
 	for url in urls:

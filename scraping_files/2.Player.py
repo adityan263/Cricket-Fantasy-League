@@ -2,6 +2,9 @@ from mysql.connector import MySQLConnection, Error
 import bs4
 import requests 
 import unicodedata
+import sys
+sys.path.append("../")
+import config
 
 mumurl = ['https://www.iplt20.com/teams/mumbai-indians/squad/91/pradeep-sangwan', 'https://www.iplt20.com/teams/mumbai-indians/squad/1594/mustafizur-rahman', 'http://www.iplt20.com/teams/mumbai-indians/squad/107/Rohit-Sharma/', 'http://www.iplt20.com/teams/mumbai-indians/squad/1124/Jasprit-Bumrah/', 'https://www.iplt20.com/teams/mumbai-indians/squad/3763/rahul-chahar', 'https://www.iplt20.com/teams/mumbai-indians/squad/913/ben-cutting', 'https://www.iplt20.com/teams/mumbai-indians/squad/588/akila-dananjaya', 'https://www.iplt20.com/teams/mumbai-indians/squad/182/jp-duminy', 'https://www.iplt20.com/teams/mumbai-indians/squad/2975/ishan-kishan', 'https://www.iplt20.com/teams/mumbai-indians/squad/872/evin-lewis', 'https://www.iplt20.com/teams/mumbai-indians/squad/4951/mayank-markande', 'https://www.iplt20.com/teams/mumbai-indians/squad/730/mitchell-mcclenaghan', 'https://www.iplt20.com/teams/mumbai-indians/squad/434/adam-milne', 'https://www.iplt20.com/teams/mumbai-indians/squad/2740/hardik-pandya', 'https://www.iplt20.com/teams/mumbai-indians/squad/3183/krunal-pandya', 'https://www.iplt20.com/teams/mumbai-indians/squad/210/kieron-pollard', 'https://www.iplt20.com/teams/mumbai-indians/squad/163/saurabh-tiwary', 'https://www.iplt20.com/teams/mumbai-indians/squad/108/suryakumar-yadav']
 cskurl = ['https://www.iplt20.com/teams/chennai-super-kings/squad/297/kedar-jadhav', 'https://www.iplt20.com/teams/chennai-super-kings/squad/2749/mark-wood', 'https://www.iplt20.com/teams/chennai-super-kings/squad/1/ms-dhoni', 'https://www.iplt20.com/teams/chennai-super-kings/squad/898/imran-tahir', 'https://www.iplt20.com/teams/chennai-super-kings/squad/2756/sam-billings', 'https://www.iplt20.com/teams/chennai-super-kings/squad/7/murali-vijay', 'https://www.iplt20.com/teams/chennai-super-kings/squad/9/ravindra-jadeja', 'https://www.iplt20.com/teams/chennai-super-kings/squad/140/deepak-chahar', 'https://www.iplt20.com/teams/chennai-super-kings/squad/14/suresh-raina', 'https://www.iplt20.com/teams/chennai-super-kings/squad/4944/km-asif', 'https://www.iplt20.com/teams/chennai-super-kings/squad/1745/shardul-thakur', 'https://www.iplt20.com/teams/chennai-super-kings/squad/24/faf-du-plessis', 'https://www.iplt20.com/teams/chennai-super-kings/squad/25/dwayne-bravo', 'https://www.iplt20.com/teams/chennai-super-kings/squad/227/shane-watson', 'https://www.iplt20.com/teams/chennai-super-kings/squad/100/ambati-rayudu', 'https://www.iplt20.com/teams/chennai-super-kings/squad/103/harbhajan-singh', 'https://www.iplt20.com/teams/chennai-super-kings/squad/2758/david-willey', 'https://www.iplt20.com/teams/chennai-super-kings/squad/4946/dhruv-shorey', 'https://www.iplt20.com/teams/chennai-super-kings/squad/1118/karn-sharma', 'https://www.iplt20.com/teams/chennai-super-kings/squad/3746/lungi-ngidi']
@@ -77,7 +80,7 @@ def connect() :
 	try:
 		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
 	except:
-		conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
+		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	team_id = 1
 	cursor = conn.cursor()
 	for teams in urls:

@@ -3,10 +3,11 @@ app = Flask(__name__)
 
 import datetime
 import mysql.connector
+import config
 
 login_needed=1
 try:
-    conn = mysql.connector.connect(database="cricket", user="project",host="127.0.0.1",password="Cricket.1")
+    conn = mysql.connector.connect(database=config.database, user=config.user, host="127.0.0.1",password=config.password)
 except:
     conn = mysql.connector.connect(database="python_mysql", user="root",host="127.0.0.1",password="vivbhav97")
 cursor = conn.cursor(buffered=True)

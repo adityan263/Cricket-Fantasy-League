@@ -2,6 +2,9 @@ from mysql.connector import MySQLConnection, Error
 import bs4
 import requests 
 import unicodedata
+import sys
+sys.path.append("../")
+import config
 #import python_mysql_dbconfig 
 
 
@@ -162,7 +165,7 @@ def connect() :
 	try:
 		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
 	except:
-		conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
+		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	cursor = conn.cursor()
 	cursor.execute("select match_id from matches order by match_id limit 1")
 	match_id = cursor.fetchone()[0]

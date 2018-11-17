@@ -1,0 +1,3 @@
+Create suitable database. Source 'ddl.sql' for database setup.
+Change database setting in each scraping file. Set database, username, password.
+Run teams.py, player.py, match.py, batting.py, bowling.py, Performance.py in that order.

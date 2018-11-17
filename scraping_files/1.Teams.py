@@ -4,7 +4,7 @@ import requests
 import unicodedata
 #import python_mysql_dbconfig 
 
-urls = ['http://www.iplt20.com/teams/delhi-daredevils', 'http://www.iplt20.com/teams/gujarat-lions', 'http://www.iplt20.com/teams/kings-xi-punjab', 'http://www.iplt20.com/teams/kolkata-knight-riders', 'http://www.iplt20.com/teams/mumbai-indians', 'http://www.iplt20.com/teams/rising-pune-supergiant', 'http://www.iplt20.com/teams/royal-challengers-bangalore', 'http://www.iplt20.com/teams/sunrisers-hyderabad']   
+urls = ['https://www.iplt20.com/teams/chennai-super-kings', 'http://www.iplt20.com/teams/delhi-daredevils', 'http://www.iplt20.com/teams/kings-xi-punjab', 'http://www.iplt20.com/teams/kolkata-knight-riders', 'http://www.iplt20.com/teams/mumbai-indians', 'https://www.iplt20.com/teams/rajasthan-royals', 'http://www.iplt20.com/teams/royal-challengers-bangalore', 'http://www.iplt20.com/teams/sunrisers-hyderabad']   
 
 
 def Team(url):
@@ -27,15 +27,45 @@ def Team(url):
 		team_info.append("-")
 
 	items = team.find('ul')
+	flag = 0
 	for item in items.find_all('li') :
 		if 'Owner' in item.text:
 			team_info.append(str(item.text.split('Owner ')[1]))
+			flag = 1
+			break
+	if flag == 0:
+		team_info.append('Himanshu')
+	else :
+		flag = 0
+		
+	for item in items.find_all('li') :
 		if 'Coach' in item.text:
 			team_info.append(str(item.text.split('Coach ')[1]))
+			flag = 1
+			break
+	if flag == 0:
+		team_info.append('Himanshu')
+	else :
+		flag = 0
+		
+	for item in items.find_all('li') :
 		if 'Venue' in item.text:
 			team_info.append(str(item.text.split('Venue ')[1]))
+			flag = 1
+			break
+	if flag == 0:
+		team_info.append('Himanshu')
+	else :
+		flag = 0
+	for item in items.find_all('li') :
 		if 'Captain' in item.text:
 			team_info.append(str(item.text.split('Captain ')[1]))
+			flag = 1
+			break
+	if flag == 0:
+		team_info.append('Himanshu')
+	else :
+		flag = 0
 
 	name = str(team_info[0])
 	win = str(team_info[1])
@@ -48,7 +78,11 @@ def Team(url):
 
 def connect() :
 	#db = python_mysql_dbconfig.read_db_config()
-	conn = MySQLConnection(host = 'localhost', database = 'cricket', user = 'project', password = 'Cricket.1')
+<<<<<<< d92e127f91f6a654068ec037be68e215bb3204a5
+	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
+=======
+	conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'password')
+>>>>>>> Fixed scraping code
 	cursor = conn.cursor()
 	i = 1
 	for url in urls:

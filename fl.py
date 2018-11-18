@@ -9,7 +9,8 @@ login_needed=1
 try:
     conn = mysql.connector.connect(database=config.database, user=config.user, host="127.0.0.1",password=config.password)
 except:
-    conn = mysql.connector.connect(database="python_mysql", user="root",host="127.0.0.1",password="vivbhav97")
+    print("MySQL login failed:Update your config.py file")
+    exit()
 cursor = conn.cursor(buffered=True)
 cursor1 = conn.cursor(buffered=True)
 #Even if previous user didn't logout, user_id will reset.

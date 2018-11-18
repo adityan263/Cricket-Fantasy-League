@@ -13,42 +13,10 @@ url1 = ['http://www.espncricinfo.com/series/8048/scorecard/1136585/sunrisers-hyd
 url2 = ['http://www.espncricinfo.com/series/8048/scorecard/1136606/chennai-super-kings-vs-sunrisers-hyderabad-46th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136607/mumbai-indians-vs-rajasthan-royals-47th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136608/kings-xi-punjab-vs-royal-challengers-bangalore-48th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136609/kolkata-knight-riders-vs-rajasthan-royals-49th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136610/mumbai-indians-vs-kings-xi-punjab-50th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136611/royal-challengers-bangalore-vs-sunrisers-hyderabad-51st-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136612/delhi-daredevils-vs-chennai-super-kings-52nd-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136613/rajasthan-royals-vs-royal-challengers-bangalore-53rd-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136614/sunrisers-hyderabad-vs-kolkata-knight-riders-54th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136615/delhi-daredevils-vs-mumbai-indians-55th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136616/chennai-super-kings-vs-kings-xi-punjab-56th-match-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136617/sunrisers-hyderabad-vs-chennai-super-kings-qualifier-1-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136618/kolkata-knight-riders-vs-rajasthan-royals-eliminator-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136619/kolkata-knight-riders-vs-sunrisers-hyderabad-qualifier-2-indian-premier-league-2018', 'http://www.espncricinfo.com/series/8048/scorecard/1136620/chennai-super-kings-vs-sunrisers-hyderabad-final-indian-premier-league-2018']
 urls = [url0, url1, url2]
 
-def find_bowlers(soup) :
-	ball_list = []
-	ball = []
-	j = 0
-	for table in soup.find_all('table'):
-		if j == 2:
-			break
-		j += 1
-		table_rows = table.find_all('tr')
-		for tr in table_rows:
-			td = tr.find_all('td')
-			row = [i.text for i in td]
-			ball_list.append(row)
-	for i in range(len(ball_list)):
-		player = []
-		if ball_list[i] == []:
-			continue
-		if len(ball_list[i]) == 10:
-			for j in range(len(ball_list[i])-1):
-				if (j != 1):
-					player.append(str(ball_list[i][j]))
-		else :
-			for j in range(len(ball_list[i])-1):
-				if (j != 1 and j != 7 and j != 8 and j != 9):
-					player.append(str(ball_list[i][j]))
-			
-		ball.append(player)
-	return ball
 
-def Bowler(url, cursor):
-	team_list = []
-	
-	#Soup Object
+def matches(url, cursor):
 	sauce = requests.get(url)
 	soup = bs4.BeautifulSoup(sauce.text, 'lxml')
-
 	#FIND NAMES OF TEAMS
 	team_list = []
 	count = 0
@@ -59,113 +27,82 @@ def Bowler(url, cursor):
 				break
 			for team in teams:
 				team_list.append(str(team.string))
-
 	#FIND ID OF TEAM
 	cursor.execute("select team_id from team where name = '" + team_list[0] + "'")
 	team1_id = cursor.fetchone()[0]
 	cursor.execute("select team_id from team where name = '" + team_list[1] + "'")
-	team2_id = cursor.fetchall()[0][0]
-		
+	team2_id = cursor.fetchone()[0]
+	
 
-	#Find all stats
-	bowlers = find_bowlers(soup)
-	cursor.execute("select name from player where team_id = '" + str(team1_id) + "' or team_id = '" + str(team2_id) + "'")
-	players = cursor.fetchall()
+	#Total Score
+	total_list = []
+	extras = []
+	i = 0
+	for total in soup.find_all('div', {'class' : 'wrap total'}):
+		for cell in total.find_all('div'):
+			if cell.string != "TOTAL":
+				total = cell.string
+				if 'all out' in total :
+					wickets = 10
+					runs = total.split()[0]
+					overs = (total.split()[3])[1:]
+					if i == 0:
+						total_list.append([team1_id, int(runs), int(wickets), int(float(overs))])
+					else : 
+						total_list.append([team2_id, int(runs), int(wickets), int(float(overs))])
+					i += 1
+					continue
+				data = total.split('/')
+				runs = data[0]
+				wickets = data[1].split()[0]
+				overs = data[1].split()[1][1:]
+				if i == 0:
+					total_list.append([team1_id, int(runs), int(wickets), int(float(overs))])
+				else : 
+					total_list.append([team2_id, int(runs), int(wickets), int(float(overs))])
+				i += 1
 
+	#Extras
+	i = 0
+	for link in soup.findAll('div', {'class' : 'wrap extras'}):
+		for cell in link.find_all('div'):
+			if i % 2 != 0:
+				data = cell.string
+				extras = data.split(',')
+				lb = nb = b = w = 0
+				for extra in extras :
+					if 'lb' in extra:
+						s = extra.split()[-1]
+						lb = s
+						if s[-1] == ')':
+							lb = s[:-1]
+						continue
+					if 'w' in extra:
+						s = extra.split()[-1]
+						w = s
+						if s[-1] == ')':
+							w = s[:-1]
+					if 'nb' in extra:
+						s = extra.split()[-1]
+						nb = s
+						if s[-1] == ')':
+							nb = s[:-1]
+						continue
+					if 'b' in extra:
+						s = extra.split()[-1]
+						b = s
+						if s[-1] == ')':
+							b = s[:-1]
+				if i == 1:
+					total_list[0].extend([int(w),int(nb),int(b),int(lb)])
+				else:
+					total_list[1].extend([int(w),int(nb),int(b),int(lb)])
+					
+			i += 1
+	return (total_list)
 
-	for bowler in bowlers :
-		n = bowler[0].split()
-		flag = 0
-		if 'Kock' in batsman:
-			batsman = 'Quinton de Kock'
-		elif 'DJM Short' in batsman or 'Short' in batsman:
-			batsman = "D'Arcy Short"
-			cursor.execute("select player_id from player where team_id = (select team_id from team where name = 'Rajasthan Royals') and matches = 7;")
-			return cursor.fetchone()[0]
-		elif 'Williamson' in batsman:
-			batsman = 'Kane Williamson'
-		elif 'DT Christian' in batsman:
-			batsman = 'Dan Christain'
-		elif 'Z Khan' in batsman:
-			batsman = 'Zaheer Khan'
-		elif 'PA Patel' in batsman:
-			batsman = 'Parthiv Patel'
-		elif 'YK Pathan' in batsman:
-			batsman = 'Yusuf Pathan'
-		elif 'AR Patel' in batsman:
-			batsman = 'Axar Patel'
-		elif 'SPD Smith' in batsman:
-			batsman = 'Steve Smith'
-		elif 'SV Samson' in batsman:
-			batsman = 'Sanju Samson'
-		elif 'SA Yadav' in batsman:
-			batsman = 'Suryakumar Yadav'
-		elif 'HH Pandya' in batsman:
-			batsman = 'Hardik Pandya'
-		elif 'KH Pandya' in batsman:
-			batsman = 'Krunal Pandya'
-		elif 'Aravind' in batsman:
-			batsman = 'Sreenath Arvind'
-		elif 'DR Smith' in batsman:
-			batsman = 'Dwayne Smith'
-		elif 'P Kumar' in batsman:
-			batsman = 'Praveen Kumar'
-		elif 'B Kumar' in batsman:
-			batsman = 'Bhuvneshwar Kumar'
-		elif 'I Sharma' in batsman:
-			batsman = 'Ishant Sharma'
-		elif 'MM Sharma' in batsman:
-			batsman = 'Mohit Sharma'
-		elif 'KV Sharma' in batsman:
-			batsman = 'Karn Sharma'
-		elif 'C de Grandhomme' in batsman:
-			batsman = 'Colin de Grandhomme'
-		elif 'UT Yadav' in batsman:
-			batsman = 'Umesh Yadav'
-		elif 'CJ Anderson' in batsman:
-			batsman = 'Corey Anderson'
-		elif 'F du Plessis' in batsman:
-			batsman = 'Faf du Plessis'
-		elif 'P Negi' in batsman:
-			batsman = 'Pavan Negi'
-		elif 'M Ashwin' in batsman:
-			batsman = 'Murugan Ashwin'
-		elif 'IS Sodhi' in batsman:
-			batsman = 'Ish Sodhi'
-		elif 'P Chopra' in batsman:
-			batsman = 'Prashant Chopra'
-		elif 'MK Lomror' in batsman:
-			batsman = 'Mahipal Lomror'
-		for player in players:
-			if bowler[0] in player[0]:
-				name = player[0]
-				flag = 1
-				break
-		if flag == 0:
-			for player in players:
-				if n[1] in player[0]:
-					name = player[0]
-					flag = 1
-					break
-			if flag == 0:
-				bowler[0] = 'PAPU'
-				continue
-		cursor.execute("select player_id from player where name = '" + name + "'")
-		player_id = cursor.fetchall()[0][0]
-		bowler[0] = player_id
-
-	final = []
-	for bowler in bowlers:
-		if not bowler[0] == 'PAPU':
-			final.append(bowler)	
-	return(final)
-
-
-def connect() :
-	try:
-		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
-	except:
-		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
+def connect() :	
+	conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	cursor = conn.cursor()
 	cursor.execute("select match_id from matches order by match_id limit 1")
 	match_id = cursor.fetchone()[0]
@@ -174,21 +111,20 @@ def connect() :
 		for url in links:
 			data = []
 			print(url)
-			items = Bowler(url, cursor)
-			print(items)
+			items = matches(url, cursor)
 			try:
 				for i in range(len(items)):
-					row = (items[i][0], match_id, int(float(items[i][1])), int(items[i][2]), int(items[i][3]), int(items[i][4]), float(items[i][5]), int(items[i][6]), int(items[i][7]))
+					row = (match_id, items[i][0], items[i][1], items[i][2], items[i][3], items[i][4], items[i][5], items[i][6], items[i][7])
+					print(row)
 					data.append(row)
-				cursor.executemany("INSERT INTO match_player_bowl VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);",data)
-				conn.commit()
+				cursor.executemany("INSERT INTO match_team_performance VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);",data)
 			except:
 				print("nai")
 			match_id += 1
+	conn.commit()
 	cursor.close()
 	conn.close()
 
-connect()
 
-
-
+if __name__ == "__main__":
+	connect()

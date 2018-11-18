@@ -80,10 +80,7 @@ def Team(url):
 	return name, win, owner, coach, venue, captain
 
 def connect() :
-	try:
-		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
-	except:
-		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
+	conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	cursor = conn.cursor()
 	i = 1
 	for url in urls:
@@ -94,4 +91,5 @@ def connect() :
 	cursor.close()
 	conn.close()
 
-connect()
+if __name__ == "__main__":
+	connect()

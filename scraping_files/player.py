@@ -77,10 +77,7 @@ def Player(url):
 	return(player)
 
 def connect() :
-	try:
-		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
-	except:
-		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
+	conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	team_id = 1
 	cursor = conn.cursor()
 	for teams in urls:
@@ -96,4 +93,6 @@ def connect() :
 	conn.close()
 
 
-connect()
+
+if __name__ == "__main__":
+	connect()

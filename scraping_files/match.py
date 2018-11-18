@@ -111,10 +111,7 @@ def Matches(url, cursor):
 
 
 def connect() :
-	try:
-		conn = MySQLConnection(host = 'localhost', database = 'python_mysql', user = 'root', password = 'Frndzz-malife1')
-	except:
-		conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
+	conn = MySQLConnection(host = 'localhost', database = config.database, user = config.user, password = config.password)
 	cursor = conn.cursor(buffered = True)
 
 	for links in urls:
@@ -125,4 +122,7 @@ def connect() :
 	conn.commit()
 	cursor.close()
 	conn.close()
-connect()
+
+
+if __name__ == "__main__":
+	connect()

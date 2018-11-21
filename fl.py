@@ -78,6 +78,7 @@ def logout(name=None):
 @app.route('/topplayers.html')
 def topplay(name=None):
     global user_id
+    print("in")
     if login_needed:
         if not user_id:
             return render_template('login.html', name=name)
@@ -93,7 +94,7 @@ def squad(name=None):
     if login_needed:
         if not user_id:
             return render_template('login.html', name=name)
-    date = "2017-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')
+    date = "2018-05-05"#datetime.datetime.today().strftime('%Y-%m-%d')
     error = ""
     cursor.execute(("select name, matches, average, strike_rate, wickets,eco,price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}');".format(date,date)))
     cursor1.execute(("select budget from users where user_id = {};".format(user_id)))

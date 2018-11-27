@@ -4,6 +4,7 @@ app = Flask(__name__)
 import datetime
 import mysql.connector
 import config
+import re
 
 login_needed=1
 try:
@@ -62,8 +63,15 @@ def pvsp(name=None):
         player2 = request.form['player2']
         if not player1 or not player2:
             return render_template('playervsplayer.html', name=name, row = [['-'] * 17]*2, error = "Enter names of both players")
-        cursor.execute(("select * from player where name in ('{}', '{}');".format(player1, player2)))
-        rows = [i for i in cursor]
+        cursor.execute(("select * from player where name = '{}';".format(player1)))
+        row1 = [i for i in cursor]
+        if not row1:
+            return render_template('playervsplayer.html', name=name, row = [['-'] * 17]*2, error = "No records for {}".format(player1))
+        cursor.execute(("select * from player where name = '{}';".format(player2)))
+        row2 = [i for i in cursor]
+        if not row2:
+            return render_template('playervsplayer.html', name=name, row = [['-'] * 17]*2, error = "No records for {}".format(player2))
+        rows = [row1[0], row2[0]]
     else:
         rows = [['-'] * 17]*2           
     return render_template('playervsplayer.html', name=name, row = rows)
@@ -411,7 +419,6 @@ def tvst(name=None):
             t2i = a[0]
         cursor.execute(("select match_id from matches where ((team1_id={} and team2_id={}) or (team1_id={} and team2_id={}))".format(t1i, t2i, t2i, t1i)))
         cur = cursor.fetchall()
-        print(cur)
         for i in cur:
             cursor.execute(("select * from match_team_performance where match_id = {}".format(int(i[0]))))
             row = [j for j in cursor]
@@ -528,7 +535,7 @@ def playerall(name=None):
 def groups(name=None):
     global user_id 
     cursor.execute(("select groupname from groups where group_id in (select group_id from user_group where user_id = {})".format(user_id)))
-    groups = [str(i)[3:-3] for i in cursor]
+    groups = ["".join(re.findall("[a-zA-Z]+", str(i))) for i in cursor]
     return render_template('groups.html', name=name, groups = groups)
 
 @app.route('/faq.html')

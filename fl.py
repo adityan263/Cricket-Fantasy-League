@@ -117,16 +117,19 @@ def squad(name=None):
             a = cursor1.fetchone()
             try:
                 if budget - int(a[1]) >= 0:
-                    cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
-                    budget -= int(a[1])
-                    cursor1.execute(("update users set budget={} where user_id = {};".format(str(budget), user_id)))
+                    cursor1.execute(("select count(player_id) from userplayer where user_id = {};".format(user_id)))
+                    no = cursor1.fetchone()
+                    if int(no[0]) >= 10:
+                        error = "You can select at the most 10 players"
+                    else:
+                        cursor1.execute(("insert into userplayer values ('{}', '{}');".format(user_id, a[0])))
+                        budget -= int(a[1])
+                        cursor1.execute(("update users set budget={} where user_id = {};".format(str(budget), user_id)))
                 else:
                     error = "Budget is insufficient"
             except mysql.connector.Error as err:
-                if err[0] == 1062:#error number
+                if err.errno == 1062:#error number
                     error = "Player already selected"
-                else:#1644
-                    error = "You can select at the most 10 players"
         elif name1:
             name = name1[7:]
             cursor1.execute(("select player_id, price from player where name = '{}';".format(name)))

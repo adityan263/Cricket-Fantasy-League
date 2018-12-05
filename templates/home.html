@@ -4,49 +4,7 @@
 		<title>
 			Home
 		</title>
-	<style type="text/css">
-		.button {
-			background-color: #1A5BE8;
-			border: none;
-			color: white;
-			padding: 5px 15px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 16px;
-			margin: 4px 2px;
-			cursor: pointer;
-		}
-		.button1 {
-		background-color: #1A5BE8;
-		color: white;
-		vertical-align: middle;
-		height: 50px;
-		width: 22.5%;
-		border: none;
-		cursor: pointer;
-		font-size: 15;
-		}
-
-		.small-image {
-			width: 100%;
-			height: 200px;
-		}
-		.button2 {
-		background-color: #1A5BE8;
-		color: white;
-		cursor: pointer;
-		height:30px;
-		font-size: 19;
-		width: 100%;
-		}
-		body {
-		background-image: url("/static/background.jpg");
-		background-size: cover;
-		background-repeat: no-repeat;
-    		background-attachment: fixed;
-	}
-	</style>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
 	</head>
 	<body bgcolor="#D3D3D3" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF">	
 		<div style="background-color:#1A5BE8; width: 100%; height: 50px; border: none;"> 
@@ -61,23 +19,29 @@
 
 			<div style="width: 70%; height: 240px; border: none; overflow: hidden; float: left;">
 				<div style="width: 49%; float: left;">
+					<a href="squadselect.html">
 					<img src="/static/selectsquad.png" class="small-image">
+					</a>
 				<center><form action="squadselect.html">
-					<button class="button2"> Select Squad </button>
+					<button class="button4"> Select Squad </button>
 				</form>	</center>
 				</div>
 		
 				<div style="width: 49%; float: right; right: 100px">
-					<img src="/static/playerlist.jpeg" class="small-image">
+					<a href="price.html">
+						<img src="/static/playerlist.jpeg" class="small-image">
+					</a>
 				<center><form action="price.html">
-					<button class="button2">Player's List</button>	
+					<button class="button4"> Player's List</button>	
 				</form> </center>
 				</div>
 			</div>
 			<div style="width: 30%; float: right; border: none; overflow: hidden;">
+					<a href="schedule.html">
 				<img src="/static/stylesheets/schedule.jpeg" class="small-image">
+					</a>
 				<center> <form action="schedule.html">
-					<button class="button2"> Schedule </button>		
+					<button class="button4"> Schedule </button>		
 				</form></center>
 			</div>
 		</div>
@@ -86,23 +50,29 @@
 
 			<div style="width: 70%; height: 240px; border: none; overflow: hidden; float: left;">
 				<div style="width: 49%; float: left;">
+					<a href="playerall.html">
 					<img src="/static/stats.jpeg" class="small-image">
+					</a>
 				<center><form action="playerall.html">
-					<button class="button2"> Player's Each Match Data </button>
+					<button class="button4"> Player's Each Match Data </button>
 				</form> </center>
 				</div>
 		
 				<div style="width: 49%; float: right; right: 100px">
+					<a href="statistics.html">
 					<img src="/static/stats2.jpeg" class="small-image">
+					</a>
 				<center><form action="statistics.html"> 
-					<button class="button2"> Statistics </button>
+					<button class="button4"> Statistics </button>
 				</form> </center>
 				</div>
 			</div>
 			<div style="width: 30%; float: right; border: none; overflow: hidden;">
+					<a href="faq.html">
 					<img src="/static/faq.jpeg" class="small-image">
+					</a>
 				<center><form action="faq.html">
-					<button class="button2"> FAQ </button>
+					<button class="button4"> FAQ </button>
 				</form></center>
 			</div>
 		</div>
@@ -110,6 +80,10 @@
 			<a href="groups.html">
 			<img src = "/static/group.jpeg" class="small-image" style="height: 200px; width: 500px;">
 			</a>
+				<center><form action="groups.html">
+					<button class="button4"
+						style="width:37.5%"> Groups </button>
+				</form></center>
 		</center>	
 	</body>
 </html>

@@ -180,7 +180,7 @@ def plist(name=None):
     if login_needed:
         if not user_id:
             return render_template('login.html', name=name)
-    cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
+    cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 
@@ -191,29 +191,31 @@ def batlist(name=None):
         if not user_id:
             return render_template('login.html', name=name)
     if request.form['send_button'] == 'Name':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by name ASC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by name ASC")
     elif request.form['send_button'] == 'Batting Style':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by batstyle DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by batstyle DESC")
     elif request.form['send_button'] == 'Matches':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by matches DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by matches DESC")
     elif request.form['send_button'] == 'Runs':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by runs DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by runs DESC")
     elif request.form['send_button'] == 'Highest Score':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by highest_score DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by highest_score DESC")
     elif request.form['send_button'] == 'Average':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by average DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by average DESC")
     elif request.form['send_button'] == 'Strike Rate':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by strike_rate DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by strike_rate DESC")
     elif request.form['send_button'] == 'Hundreds':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by hundreds DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by hundreds DESC")
     elif request.form['send_button'] == 'Fifties':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by fifties DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by fifties DESC")
     elif request.form['send_button'] == 'Fours':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by fours DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by fours DESC")
     elif request.form['send_button'] == 'Sixes':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player order by sixes DESC")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by sixes DESC")
+    elif request.form['send_button'] == 'Price':
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by price DESC")
     else:
-        cursor.execute("select name, batstyle, matches, run`s, highest_score, average, strike_rate, hundreds, fifties, fours, sixes from player")
+        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player")
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 
@@ -225,17 +227,19 @@ def bowl(name=None):
             return render_template('login.html', name=name)
     if request.method == "POST":
         if request.form['send_button'] == 'Name':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by name asc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by name asc")
         elif request.form['send_button'] == 'Matches':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by matches desc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by matches desc")
         elif request.form['send_button'] == 'Wickets':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by wickets desc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by wickets desc")
         elif request.form['send_button'] == 'Economy':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by eco asc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by eco asc")
         elif request.form['send_button'] == '4 Wicket Hauls':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by fourhaul desc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by fourhaul desc")
         elif request.form['send_button'] == '5 Wicket Hauls':
-            cursor.execute("select name, matches, wickets, eco, fourhaul,fivehaul from player order by fivehaul desc")
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by fivehaul desc")
+        elif request.form['send_button'] == 'Price':
+            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by price desc")
     else:
         cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player")
     rows = [i for i in cursor]

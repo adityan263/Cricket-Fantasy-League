@@ -4,53 +4,7 @@
 		<title>
 			Team Vs Team
 		</title>
-	<style type="text/css">
-		.button {
-			background-color: #1A5BE8;
-			border: none;
-			color: white;
-			padding: 5px 15px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 16px;
-			margin: 4px 2px;
-			cursor: pointer;
-		}
-		.button1 {
-		background-color: #1A5BE8;
-		color: white;
-		vertical-align: middle;
-		height: 50px;
-		width: 22.5%;
-		border: none;
-		cursor: pointer;
-		font-size: 15;
-		}
-		.div1 {
-			background-color:#1A5BE8;
-			width: 100%; 
-			height: 50px;
-			border: none;
-			position: fixed;
-		}
-		.button2 {
-		background-color: #1A5BE8;
-		color: white;
-		cursor: pointer;
-		font-size: 15;
-		}
-		body {
-		background-image: url("/static/background.jpg");
-		background-size: cover;
-		background-repeat: no-repeat;
-    		background-attachment: fixed;
-		}
-		.table1 {
-		width: 30%;
-		background: rgba(255,255,255,0.65);
-		}
-	</style>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
 	</head>
 	<body bgcolor="#D3D3D3" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF">	
 		<div class = "div1">
@@ -68,11 +22,17 @@
 			<input class="button" name="submit" type="submit" value="Compare" style="width: 200px">
 		</form>
 		</center>
-	
+		{% if count %}
+		<table class="table1" style="width:22%"><td>
 		Head to Head Matches Played: {{ count }}
+		{% endif %}
+		</td></table>
 		<br><br><br>
 		{% for row in rows %}
+		<br>
+		<table class="table1" style="width:08%"><td>
 		Match {{ row[0][0] }}
+		</td></table>
 		<table style="width:75%" align="center" border=1 class="table1">
 			<tr>
 				<th> {{ name1 }} </th>

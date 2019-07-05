@@ -8,6 +8,8 @@
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	</head>
 	<body bgcolor="#D3D3D3" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF">	
+		<script>var rows = {{ rows|tojson }}</script>
+		<script type='text/javascript' src="{{ url_for('static', filename='scripts.js') }}"></script>
 		<div class = "div1">
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Live Matches </a></button>	 
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Current Series </a></button>
@@ -19,19 +21,20 @@
 			<div id = 'leftbox' class="child" style="width: 750px; float: left;">
 				
 		<form action="/squadselect.html" method="POST">
-		<table style="width:100%" align="center" border=1 class="table1">
+		<table style="width:100%" align="center" border=1 class="table1"
+			id="table">
 			<tr>
 				<th>Select Player</th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Name" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Matches" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Average" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Strike Rate" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Wickets" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Economy" style="width:100%"></th>
-				<th><input class="button2" name ="send_button2" type="submit" value="Price" style="width:100%"></th>
+				<th><button onclick={dosort(0,0)} style="width:100%" class="button2">Name</button></th>
+				<th><button onclick={dosort(1,1)} style="width:100%" class="button2">Matches</button></th>
+				<th><button onclick={dosort(2,1)} style="width:100%" class="button2">Average</button></th>
+				<th><button onclick={dosort(3,1)} style="width:100%" class="button2">Strike Rate</button></th>
+				<th><button onclick={dosort(4,1)} style="width:100%" class="button2">Wickets</button></th>
+				<th><button onclick={dosort(5,0)} style="width:100%" class="button2">Economy</button></th>
+				<th><button onclick={dosort(6,0)} style="width:100%" class="button2">Price</button></th>
 			</tr>
 			{% for row in rows %}
-			<tr align="center">
+			<tr align="center" id="datarows">
 				<td><input class="button2" name ="send_button" type="submit" value="Select {{ row[0] }}" style="width:100%"></td>
 				<td> {{ row[0] }}</td>
 				<td> {{ row[1] }}</td>

@@ -13,12 +13,12 @@ DROP TABLE team;
 
 CREATE TABLE users(                                                 
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
-	firstname VARCHAR(20) NOT NULL,
-	lastname VARCHAR(20) NOT NULL,
-	email VARCHAR(20) NOT NULL,
-	favteam VARCHAR(20) NOT NULL,                          
-	username VARCHAR(20) NOT NULL,
-	password VARCHAR(20) NOT NULL,
+	firstname VARCHAR(30) NOT NULL,
+	lastname VARCHAR(30) NOT NULL,
+	email VARCHAR(30) NOT NULL,
+	favteam VARCHAR(30) NOT NULL,                          
+	username VARCHAR(30) NOT NULL,
+	password VARCHAR(30) NOT NULL,
 	budget INT NOT NULL,
 	points INT NOT NULL
 );
@@ -26,10 +26,10 @@ CREATE TABLE users(
 CREATE TABLE team(
 	team_id INT,
 	name VARCHAR(30) NOT NULL,
-	win_year VARCHAR(30),
+	win_year VARCHAR(50),
 	owner VARCHAR(50),
 	coach VARCHAR(30),
-	venue VARCHAR(530),
+	venue VARCHAR(50),
 	captain VARCHAR(30),
 	PRIMARY KEY(team_id)
 );
@@ -59,7 +59,7 @@ CREATE TABLE player(
 
 CREATE TABLE groups(
 	group_id INT PRIMARY KEY AUTO_INCREMENT,
-	groupname VARCHAR(20) NOT NULL
+	groupname VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE user_group(
@@ -78,7 +78,7 @@ CREATE TABLE ground(
 	ground_id INT PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(100) NOT NULL,
 	city VARCHAR(20) NOT NULL,
-	country VARCHAR(20) NOT NULL,
+	country VARCHAR(40) NOT NULL,
 	capacity INT
 );
 

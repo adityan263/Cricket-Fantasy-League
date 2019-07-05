@@ -1,4 +1,4 @@
 #Database configuration file
-database = ""
-user = ""
-password = ""
+database = "new"
+user = "root"
+password = "neralkar"

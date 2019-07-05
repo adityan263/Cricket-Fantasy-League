@@ -6,7 +6,7 @@ import mysql.connector
 import config
 import re
 
-login_needed=1
+login_needed=0
 try:
     conn = mysql.connector.connect(database=config.database, user=config.user, host="127.0.0.1",password=config.password)
 except:
@@ -149,21 +149,6 @@ def squad(name=None):
                 cursor1.execute(("delete from userplayer where user_id={} and player_id={};".format(user_id, p_id)))
                 budget += add
                 cursor1.execute(("update users set budget={} where user_id = {};".format(str(budget), user_id)))
-        else:
-            if name2 == "Name":
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by name ASC".format(date,date)))
-            elif name2 == 'Matches':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by matches DESC".format(date,date)))
-            elif name2 == 'Average':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by average DESC".format(date,date)))
-            elif name2 == 'Strike Rate':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by strike_rate DESC".format(date,date)))
-            elif name2 == 'Wickets':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by wickets DESC".format(date,date)))
-            elif name2 == 'Economy':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by eco ASC".format(date,date)))
-            elif name2 == 'Price':
-                cursor.execute(("select name, matches, average, strike_rate, wickets, eco, price from player where team_id in (select team1_id from matches where dates = '{}') or team_id in (select team2_id from matches where dates = '{}') order by price DESC".format(date,date)))
         cursor1.execute(("commit;"))
     rows = [i for i in cursor]
     cursor1.execute(("select name, price from player where player_id in (select player_id from userplayer where user_id= '{}');".format(user_id)))
@@ -174,7 +159,7 @@ def squad(name=None):
     cursor1.execute("UPDATE users set points = {} where user_id = {}".format(p, user_id))
     return render_template('squadselect.html', name=name, rows = rows, rows1 = rows1, error = error, budget = budget, p = p)
 
-@app.route('/price.html')
+@app.route('/price.html', methods=['GET'])
 def plist(name=None):
     global user_id
     if login_needed:
@@ -184,64 +169,13 @@ def plist(name=None):
     rows = [i for i in cursor]
     return render_template('price.html', name=name, rows=rows)
 
-@app.route('/price.html', methods=['POST','GET'])
-def batlist(name=None):
-    global user_id
-    if login_needed:
-        if not user_id:
-            return render_template('login.html', name=name)
-    if request.form['send_button'] == 'Name':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by name ASC")
-    elif request.form['send_button'] == 'Batting Style':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by batstyle DESC")
-    elif request.form['send_button'] == 'Matches':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by matches DESC")
-    elif request.form['send_button'] == 'Runs':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by runs DESC")
-    elif request.form['send_button'] == 'Highest Score':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by highest_score DESC")
-    elif request.form['send_button'] == 'Average':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by average DESC")
-    elif request.form['send_button'] == 'Strike Rate':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by strike_rate DESC")
-    elif request.form['send_button'] == 'Hundreds':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by hundreds DESC")
-    elif request.form['send_button'] == 'Fifties':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by fifties DESC")
-    elif request.form['send_button'] == 'Fours':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by fours DESC")
-    elif request.form['send_button'] == 'Sixes':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by sixes DESC")
-    elif request.form['send_button'] == 'Price':
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player order by price DESC")
-    else:
-        cursor.execute("select name, batstyle, matches, runs, highest_score, average, strike_rate, hundreds, fifties, fours, sixes, price from player")
-    rows = [i for i in cursor]
-    return render_template('price.html', name=name, rows=rows)
-
-@app.route('/bowling.html', methods=['POST', 'GET'])
+@app.route('/bowling.html', methods=['GET'])
 def bowl(name=None):
     global user_id
     if login_needed:
         if not user_id:
             return render_template('login.html', name=name)
-    if request.method == "POST":
-        if request.form['send_button'] == 'Name':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by name asc")
-        elif request.form['send_button'] == 'Matches':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by matches desc")
-        elif request.form['send_button'] == 'Wickets':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by wickets desc")
-        elif request.form['send_button'] == 'Economy':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by eco asc")
-        elif request.form['send_button'] == '4 Wicket Hauls':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by fourhaul desc")
-        elif request.form['send_button'] == '5 Wicket Hauls':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by fivehaul desc")
-        elif request.form['send_button'] == 'Price':
-            cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player order by price desc")
-    else:
-        cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player")
+    cursor.execute("select name, matches, wickets, eco, fourhaul, fivehaul, price from player")
     rows = [i for i in cursor]
     return render_template('bowling.html', name=name, rows=rows)
 

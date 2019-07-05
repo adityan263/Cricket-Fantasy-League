@@ -7,33 +7,35 @@
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	</head>
 	<body bgcolor="#D3D3D3" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF">	
+		<script>var rows = {{ rows|tojson }}</script>
+		<script type='text/javascript' src="{{ url_for('static', filename='scripts.js') }}"></script>
 		<div style="background-color:#1A5BE8; width: 100%; height: 50px; border: none;"> 
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Live Matches </a></button>	 
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Current Series </a></button>
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Upcoming Series </a></button>
 		<button class="button1"><a style="text-decoration:none" href="topplayers.html"> Top Players </a></button>
 		</div><br><br>
-                <form action="/price.html" method="POST">
 		<a href="bowling.html" class="button"> Bowling Statistics </a>
 		<a href="home.html" class="button3"> Back </a>
 		<br><br>
-		<table style="width:100%" align="center" border=1 class="table1">
+		<table style="width:100%" align="center" border=1 class="table1"
+			id="table">
 			<tr>
-				<th><input class="button2" name ="send_button" type="submit" value="Name" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Batting Style" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Matches" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Runs" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Highest Score" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Average" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Strike Rate" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Hundreds" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Fifties" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Fours" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Sixes" style="width:100%"></th>
-				<th><input class="button2" name ="send_button" type="submit" value="Price" style="width:100%"></th>
+				<th><button onclick={dosort(0,0)} style="width:100%" class="button2">Name</button></th>
+				<th><button onclick={dosort(1,0)} style="width:100%" class="button2">Batting Style</button></th>
+				<th><button onclick={dosort(2,1)} style="width:100%" class="button2">Matches</button></th>
+				<th><button onclick={dosort(3,1)} style="width:100%" class="button2">Runs</button></th>
+				<th><button onclick={dosort(4,1)} style="width:100%" class="button2">Highest Score</button></th>
+				<th><button onclick={dosort(5,1)} style="width:100%" class="button2">Average</button></th>
+				<th><button onclick={dosort(6,1)} style="width:100%" class="button2">Strike Rate</button></th>
+				<th><button onclick={dosort(7,1)} style="width:100%" class="button2">Hundreds</button></th>
+				<th><button onclick={dosort(8,1)} style="width:100%" class="button2">Fifties</button></th>
+				<th><button onclick={dosort(9,1)} style="width:100%" class="button2">Fours</button></th>
+				<th><button onclick={dosort(10,1)} style="width:100%" class="button2">Sixes</button></th>
+				<th><button onclick={dosort(11,0)} style="width:100%" class="button2">Price</button></th>
 			</tr>
 			{% for row in rows %}
-			<tr align="center">
+			<tr align="center" id="datarows">
 				<td> {{ row[0] }}</td>
 				<td> {{ row[1] }}</td>
 				<td> {{ row[2] }} </td>
@@ -49,7 +51,7 @@
 			</tr>
 			{% endfor %}
 		</table>
-		</form><center>
+		<center>
 		<a href="home.html" class="button"> Back </a></center>
 	</body>
 </html>
